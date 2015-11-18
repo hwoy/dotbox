@@ -8,6 +8,7 @@ static void replacech(char *str,char ch,char rp);
 void printTable(struct dbs_game *game,unsigned int len)
 {
 	unsigned int x,y,i,j;
+	putchar('\n');
 	for(y=0;y<game->sqr+1;y++)
 	{
 		for(j=0;j<len;j++)
@@ -45,6 +46,7 @@ void printTable(struct dbs_game *game,unsigned int len)
 		}
 		
 	}
+	putchar('\n');
 }
 
 

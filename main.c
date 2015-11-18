@@ -19,7 +19,7 @@ int main(void)
 		putchar('\n');
 	}
 	*/
-
+/*
 	for(y=0;y<game.sqr+1;y++)
 	{
 		for(x=0;x<game.sqr+1;x++)
@@ -27,7 +27,12 @@ int main(void)
 			game.point[y*(game.sqr+1)+x].stamp=STAMP;
 		}
 	}
+*/
+dbf_setlinex(&game,0);
+dbf_setlinex(&game,3);
+dbf_setlinex(&game,4);
 
+dbf_setliney(&game,0);
 	printTable(&game,LEN);
 	
 	dbf_destroy(&game);

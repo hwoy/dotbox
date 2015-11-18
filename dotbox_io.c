@@ -19,7 +19,7 @@ void printTable(struct dbs_game *game,unsigned int len)
 			if(j==0)
 			{
 				putchar('*');
-			if(game->point[y*(game->sqr+1)+x].stamp==STAMP && game->point[y*(game->sqr+1)+x+1].stamp==STAMP && x<game->sqr)
+			if(game->point[y*(game->sqr+1)+x].stampx==STAMP && game->point[y*(game->sqr+1)+x+1].stampx==STAMP && x<game->sqr)
 			{
 				for(i=0;i<len;i++)putchar('-');
 			}
@@ -30,7 +30,7 @@ void printTable(struct dbs_game *game,unsigned int len)
 			}
 			else
 			{
-				if(game->point[y*(game->sqr+1)+x].stamp==STAMP && game->point[(y+1)*(game->sqr+1)+x].stamp==STAMP)
+				if(game->point[y*(game->sqr+1)+x].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x].stampy==STAMP)
 				{
 					putchar('|');
 				}

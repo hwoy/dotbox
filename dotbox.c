@@ -31,17 +31,15 @@ void *dbf_destroy(struct dbs_game *game)
 void dbf_setpoint(struct dbs_game *game,unsigned int x,unsigned int y)
 {
 			game->point[y*(game->sqr+1)+x].stamp=STAMP;
-			game->point[y*(game->sqr+1)+x].x=x;
-			game->point[y*(game->sqr+1)+x].y=y;
 }
 
 int dbf_setline(struct dbs_game *game,unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2)
 {
 	if( ( ((int)(x2-x1))>1 || ((int)(x2-x1))<-1) &&(((int)(y2-y1))>1 || ((int)(y2-y1))<-1)) return -1;	
-	if( game->point[y1*(game->sqr+1)+x1].stamp==STAMP ||  game->point[y2*(game->sqr+1)+x2].stamp==STAMP) return -2;
+	if( game->point[y1*(game->sqr+1)+x1].stamp==STAMP &&  game->point[y2*(game->sqr+1)+x2].stamp==STAMP) return -2;
 	
 dbf_setpoint(game,x1,y1);
-dbf_setpoint(game,x1,y1);
+dbf_setpoint(game,x2,y2);
 
 	return 0;
 }

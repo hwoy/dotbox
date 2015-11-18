@@ -1,12 +1,12 @@
 CC=gcc
 bin=dotbox
-
+CFLAGS=-O2 -std=c89 -pedantic
 .PHONY: all clean
 
 all: $(bin)
 
-$(bin):	main.o  dotbox.o
-	$(CC) -o $(bin) main.o  dotbox.o
+$(bin):	main.o  dotbox.o dotbox_io.o
+	$(CC) -o $(bin) main.o  dotbox.o dotbox_io.o
 
 clean:
 	rm -rf *.o *.exe $(bin)

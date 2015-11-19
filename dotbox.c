@@ -147,9 +147,9 @@ int dbf_countsqr(struct dbs_game *game)
 return game->count-count;	
 }
 
-unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line)
+unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line,unsigned int rcount)
 {
-	unsigned int x,y,i,j,flag,count;
+	unsigned int x,y,i,j,n,flag,count;
 	
 	count=0;
 	for(y=0;y<game->sqr;y++)
@@ -169,26 +169,32 @@ unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line)
 					flag|=POW2A(i+2);
 			}
 			
-			if(dbf_countbit(flag)==(4-1))
+			if(dbf_countbit(flag)==(4-rcount))
 			{
-				switch(j=dbf_postzerobit(flag))
+				for(n=0;n<4;n++)
+				{
+					if(!(flag&POW2A(n)))
+					{
+				switch(n)
 				{
 					case 0:
 					case 1:
 					line[count].p1.x=x;
-					line[count].p1.y=y+j;
+					line[count].p1.y=y+n;
 					line[count].p2.x=x+1;
-					line[count].p2.y=y+j;
+					line[count].p2.y=y+n;
 					break;
 					case 2:
 					case 3:
-					line[count].p1.x=x+j-2;
+					line[count].p1.x=x+n-2;
 					line[count].p1.y=y;
-					line[count].p2.x=x+j-2;
+					line[count].p2.x=x+n-2;
 					line[count].p2.y=y+1;
 					break;
 				}
 				count++;
+					}
+				}
 			}
 			
 

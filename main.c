@@ -6,9 +6,9 @@
 
 int main(void)
 {
-	unsigned int x,y,i;
+	unsigned int x,y,i,j;
 	struct dbs_game game;
-	struct dbs_line line;
+	struct dbs_line line[(D_SQR+1)*(D_SQR+1)];
 	
 	dbf_init(&game,"Hwoy",D_SQR+1);
 
@@ -23,14 +23,23 @@ dbf_setlinex(&game,3);
 dbf_setliney(&game,0);
 dbf_setliney(&game,3);
 
+dbf_setlinex(&game,1);
+dbf_setliney(&game,6);
+
+dbf_setlinex(&game,8);
+dbf_setlinex(&game,11);
+dbf_setliney(&game,8);
+
 printTable(&game,LEN);
 dbf_countsqr(&game);
 printf("\nsqr count = %u\n",game.count);
-if(dbf_getremain_one_line(&game,&line))
+i=dbf_getremain_one_line(&game,line);
+for(j=0;j<i;j++)
 {
-	printf("%u,%u  %u,%u\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
+	dbf_setlinepoint(&game,&line[j]);
+	/*printf("%u,%u  %u,%u\n",line[j].p1.x,line[j].p1.y,line[j].p2.x,line[j].p2.y);*/
 }
-
+printTable(&game,LEN);
 
 
 	dbf_destroy(&game);

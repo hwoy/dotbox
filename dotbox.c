@@ -147,9 +147,11 @@ int dbf_countsqr(struct dbs_game *game)
 return game->count-count;	
 }
 
-int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line)
+unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line)
 {
-	unsigned int x,y,i,j,flag;
+	unsigned int x,y,i,j,flag,count;
+	
+	count=0;
 	for(y=0;y<game->sqr;y++)
 	{
 		for(x=0;x<game->sqr;x++)
@@ -173,26 +175,26 @@ int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line)
 				{
 					case 0:
 					case 1:
-					line->p1.x=x;
-					line->p1.y=y+j;
-					line->p2.x=x+1;
-					line->p2.y=y+j;
+					line[count].p1.x=x;
+					line[count].p1.y=y+j;
+					line[count].p2.x=x+1;
+					line[count].p2.y=y+j;
 					break;
 					case 2:
 					case 3:
-					line->p1.x=x+j-2;
-					line->p1.y=y;
-					line->p2.x=x+j-2;
-					line->p2.y=y+1;
+					line[count].p1.x=x+j-2;
+					line[count].p1.y=y;
+					line[count].p2.x=x+j-2;
+					line[count].p2.y=y+1;
 					break;
 				}
-				return 1;
+				count++;
 			}
 			
 
 		}
 	}
-	return 0;
+	return count;
 }
 
 unsigned int dbf_countbit(unsigned int num)

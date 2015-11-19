@@ -47,7 +47,7 @@ int dbf_random (int min, int max);
 
 int dbf_countsqr(struct dbs_game *game);
 
-int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line);
+unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line);
 
 unsigned int dbf_countbit(unsigned int num);
 int dbf_postzerobit(unsigned int num);

@@ -93,3 +93,31 @@ int dbf_setliney(struct dbs_game *game,unsigned int linenum)
 	return dbf_setlinepoint(game,p1.x,p1.y,p2.x,p2.y);
 }
 
+void dbf_srandom (void)
+{
+  srand (time (NULL));
+}
+
+
+int dbf_rand(void)
+{
+#ifdef _DEVRAND_
+        FILE           *fp;
+        int             i;
+        fp = fopen(DEVRAND, "rb");
+        if (!fp)
+                return 0;
+
+        ((char *)&i)[0] = fgetc(fp);
+        ((char *)&i)[1] = fgetc(fp);
+        fclose(fp);
+        return i;
+#else
+                        return  rand   ();
+#endif
+}
+
+int dbf_random (int min, int max)
+{
+  return min <= max ? min + (dbf_rand () % (max - min + 1)) : -1;
+}

@@ -33,3 +33,11 @@ void dbf_getpointy(struct dbs_game *game,unsigned int linenum,struct dbs_point *
 int dbf_setlinex(struct dbs_game *game,unsigned int linenum);
 int dbf_setliney(struct dbs_game *game,unsigned int linenum);
 
+void dbf_srandom (void);
+int dbf_rand(void);
+int dbf_random (int min, int max);
+
+
+#ifdef _DEVRAND_
+const char DEVRAND[]="/dev/urandom";
+#endif

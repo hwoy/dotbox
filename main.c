@@ -30,10 +30,12 @@ dbf_setlinex(&game,8);
 dbf_setlinex(&game,11);
 dbf_setliney(&game,8);
 
+dbf_setlinex(&game,2);
+
 printTable(&game,LEN);
 dbf_countsqr(&game);
 printf("\nsqr count = %u\n",game.count);
-i=dbf_getremain_one_line(&game,line,2);
+i=dbf_getremainline(&game,line,2);
 for(j=0;j<i;j++)
 {
 	dbf_setlinepoint(&game,&line[j]);

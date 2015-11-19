@@ -15,8 +15,10 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	{
 		for(x=0;x<game->sqr+1;x++)
 		{
-			game->point[y*(game->sqr+1)+x].stampx=UNSTAMP;
-			game->point[y*(game->sqr+1)+x].stampy=UNSTAMP;
+			game->point[y*(game->sqr+1)+x].prev_x=UNSTAMP;
+			game->point[y*(game->sqr+1)+x].next_x=UNSTAMP;
+			game->point[y*(game->sqr+1)+x].prev_y=UNSTAMP;
+			game->point[y*(game->sqr+1)+x].next_y=UNSTAMP;
 			game->point[y*(game->sqr+1)+x].x=x;
 			game->point[y*(game->sqr+1)+x].y=y;
 		}
@@ -30,15 +32,29 @@ void *dbf_destroy(struct dbs_game *game)
 	free(game->point);
 }
 
-void dbf_setpointx(struct dbs_game *game,struct dbs_point *point)
+
+
+
+void dbf_setpoint_prev_x(struct dbs_game *game,struct dbs_point *point)
 {
-			game->point[point->y*(game->sqr+1)+point->x].stampx=STAMP;
+			game->point[point->y*(game->sqr+1)+point->x].prev_x=STAMP;
+}
+void dbf_setpoint_next_x(struct dbs_game *game,struct dbs_point *point)
+{
+			game->point[point->y*(game->sqr+1)+point->x].next_x=STAMP;
 }
 
-void dbf_setpointy(struct dbs_game *game,struct dbs_point *point)
+void dbf_setpoint_prev_y(struct dbs_game *game,struct dbs_point *point)
 {
-			game->point[point->y*(game->sqr+1)+point->x].stampy=STAMP;
+			game->point[point->y*(game->sqr+1)+point->x].prev_y=STAMP;
 }
+void dbf_setpoint_next_y(struct dbs_game *game,struct dbs_point *point)
+{
+			game->point[point->y*(game->sqr+1)+point->x].next_y=STAMP;
+}
+
+
+
 
 int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 {
@@ -47,25 +63,26 @@ int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 	
 	if(line->p1.y==line->p2.y)
 	{
-		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].stampx==STAMP &&  \
-		game->point[line->p2.y*(game->sqr+1)+line->p2.x].stampx==STAMP) return -2;
+		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x==STAMP &&  \
+		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_x==STAMP) return -2;
 		
-		dbf_setpointx(game,&line->p1);
-		dbf_setpointx(game,&line->p2);
+		dbf_setpoint_next_x(game,&line->p1);
+		dbf_setpoint_prev_x(game,&line->p2);
 
 	}
 	else if(line->p1.x==line->p2.x)
 	{
-		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].stampy==STAMP &&  \
-		game->point[line->p2.y*(game->sqr+1)+line->p2.x].stampy==STAMP) return -3;
+		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_y==STAMP &&  \
+		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_y==STAMP) return -3;
 		
-		dbf_setpointy(game,&line->p1);
-		dbf_setpointy(game,&line->p2);
+		dbf_setpoint_next_y(game,&line->p1);
+		dbf_setpoint_prev_y(game,&line->p2);
 	}
 	
 
 	return 0;
 }
+
 
 void dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
 {
@@ -136,10 +153,10 @@ int dbf_countsqr(struct dbs_game *game)
 	{
 		for(x=0;x<game->sqr;x++)
 		{
-			if(game->point[y*(game->sqr+1)+x].stampx==STAMP && game->point[y*(game->sqr+1)+x+1].stampx==STAMP &&\
-			   game->point[(y+1)*(game->sqr+1)+x].stampx==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].stampx==STAMP &&\
-			   game->point[y*(game->sqr+1)+x].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x].stampy==STAMP &&\
-			   game->point[y*(game->sqr+1)+x+1].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].stampy==STAMP
+			if(game->point[y*(game->sqr+1)+x].next_x==STAMP && game->point[y*(game->sqr+1)+x+1].prev_x==STAMP &&\
+			   game->point[(y+1)*(game->sqr+1)+x].next_x==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].prev_x==STAMP &&\
+			   game->point[y*(game->sqr+1)+x].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x].prev_y==STAMP &&\
+			   game->point[y*(game->sqr+1)+x+1].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].prev_y==STAMP
 			   )
 			   game->count++;
 		}
@@ -147,7 +164,7 @@ int dbf_countsqr(struct dbs_game *game)
 return game->count-count;	
 }
 
-unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line,unsigned int rcount)
+unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsigned int rcount)
 {
 	unsigned int x,y,i,j,n,flag,count;
 	
@@ -159,13 +176,13 @@ unsigned int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line,
 			flag=0;
 			for(i=0;i<2;i++)
 			{
-				if(game->point[(y+i)*(game->sqr+1)+x].stampx==STAMP && game->point[(y+i)*(game->sqr+1)+x+1].stampx==STAMP)
+				if(game->point[(y+i)*(game->sqr+1)+x].next_x==STAMP && game->point[(y+i)*(game->sqr+1)+x+1].prev_x==STAMP)
 					flag|=POW2A(i);
 			}
 			
 			for(i=0;i<2;i++)
 			{
-				if(game->point[y*(game->sqr+1)+x+i].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x+i].stampy==STAMP)
+				if(game->point[y*(game->sqr+1)+x+i].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x+i].prev_y==STAMP)
 					flag|=POW2A(i+2);
 			}
 			

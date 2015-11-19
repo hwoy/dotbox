@@ -8,6 +8,8 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->playername=playername;
 	game->sqr=sqr;
 	game->count=0;
+	game->hscore=0;
+	game->cscore=0;
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
 	
@@ -84,22 +86,26 @@ int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 }
 
 
-void dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
+struct dbs_line *dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
 {
 	line->p1.y=linenum/(game->sqr);
 	line->p1.x=linenum%(game->sqr);
 	
 	line->p2.y=line->p1.y;
 	line->p2.x=line->p1.x+1;
+	
+	return line;
 }
 
-void dbf_getpointliney(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
+struct dbs_line *dbf_getpointliney(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
 {
 	line->p1.x=linenum/(game->sqr);
 	line->p1.y=linenum%(game->sqr);
 	
 	line->p2.x=line->p1.x;
 	line->p2.y=line->p1.y+1;
+	
+	return line;
 }
 
 int dbf_setlinex(struct dbs_game *game,unsigned int linenum)

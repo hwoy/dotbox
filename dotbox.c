@@ -30,68 +30,73 @@ void *dbf_destroy(struct dbs_game *game)
 	free(game->point);
 }
 
-void dbf_setpointx(struct dbs_game *game,unsigned int x,unsigned int y)
+void dbf_setpointx(struct dbs_game *game,struct dbs_point *point)
 {
-			game->point[y*(game->sqr+1)+x].stampx=STAMP;
+			game->point[point->y*(game->sqr+1)+point->x].stampx=STAMP;
 }
 
-void dbf_setpointy(struct dbs_game *game,unsigned int x,unsigned int y)
+void dbf_setpointy(struct dbs_game *game,struct dbs_point *point)
 {
-			game->point[y*(game->sqr+1)+x].stampy=STAMP;
+			game->point[point->y*(game->sqr+1)+point->x].stampy=STAMP;
 }
 
-int dbf_setlinepoint(struct dbs_game *game,unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2)
+int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 {
-	if( ( ((int)(x2-x1))>1 || ((int)(x2-x1))<-1) &&(((int)(y2-y1))>1 || ((int)(y2-y1))<-1)) return -1;	
+	if( ( ((int)(line->p2.x-line->p1.x))>1 || ((int)(line->p2.x-line->p1.x))<-1) && \
+	(((int)(line->p2.y-line->p1.y))>1 || ((int)(line->p2.y-line->p1.y))<-1)) return -1;	
 	
-	if(y1==y2)
+	if(line->p1.y==line->p2.y)
 	{
-		if( game->point[y1*(game->sqr+1)+x1].stampx==STAMP &&  game->point[y2*(game->sqr+1)+x2].stampx==STAMP) return -2;
-		dbf_setpointx(game,x1,y1);
-		dbf_setpointx(game,x2,y2);
+		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].stampx==STAMP &&  \
+		game->point[line->p2.y*(game->sqr+1)+line->p2.x].stampx==STAMP) return -2;
+		
+		dbf_setpointx(game,&line->p1);
+		dbf_setpointx(game,&line->p2);
 
 	}
-	else if(x1==x2)
+	else if(line->p1.x==line->p2.x)
 	{
-		if( game->point[y1*(game->sqr+1)+x1].stampy==STAMP &&  game->point[y2*(game->sqr+1)+x2].stampy==STAMP) return -3;
-		dbf_setpointy(game,x1,y1);
-		dbf_setpointy(game,x2,y2);
+		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].stampy==STAMP &&  \
+		game->point[line->p2.y*(game->sqr+1)+line->p2.x].stampy==STAMP) return -3;
+		
+		dbf_setpointy(game,&line->p1);
+		dbf_setpointy(game,&line->p2);
 	}
 	
 
 	return 0;
 }
 
-void dbf_getpointx(struct dbs_game *game,unsigned int linenum,struct dbs_point *p1,struct dbs_point *p2)
+void dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
 {
-	p1->y=linenum/(game->sqr);
-	p1->x=linenum%(game->sqr);
+	line->p1.y=linenum/(game->sqr);
+	line->p1.x=linenum%(game->sqr);
 	
-	p2->y=p1->y;
-	p2->x=p1->x+1;
+	line->p2.y=line->p1.y;
+	line->p2.x=line->p1.x+1;
 }
 
-void dbf_getpointy(struct dbs_game *game,unsigned int linenum,struct dbs_point *p1,struct dbs_point *p2)
+void dbf_getpointliney(struct dbs_game *game,unsigned int linenum,struct dbs_line *line)
 {
-	p1->x=linenum/(game->sqr);
-	p1->y=linenum%(game->sqr);
+	line->p1.x=linenum/(game->sqr);
+	line->p1.y=linenum%(game->sqr);
 	
-	p2->x=p1->x;
-	p2->y=p1->y+1;
+	line->p2.x=line->p1.x;
+	line->p2.y=line->p1.y+1;
 }
 
 int dbf_setlinex(struct dbs_game *game,unsigned int linenum)
 {
-	struct dbs_point p1,p2;
-	dbf_getpointx(game,linenum,&p1,&p2);
-	return dbf_setlinepoint(game,p1.x,p1.y,p2.x,p2.y);
+	struct dbs_line line;
+	dbf_getpointlinex(game,linenum,&line);
+	return dbf_setlinepoint(game,&line);
 }
 
 int dbf_setliney(struct dbs_game *game,unsigned int linenum)
 {
-	struct dbs_point p1,p2;
-	dbf_getpointy(game,linenum,&p1,&p2);
-	return dbf_setlinepoint(game,p1.x,p1.y,p2.x,p2.y);
+	struct dbs_line line;
+	dbf_getpointliney(game,linenum,&line);
+	return dbf_setlinepoint(game,&line);
 }
 
 void dbf_srandom (void)

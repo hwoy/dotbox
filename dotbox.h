@@ -11,6 +11,11 @@ struct dbs_point
 	unsigned int y;
 };
 
+struct dbs_line
+{
+	struct dbs_point p1;
+	struct dbs_point p2;
+};
 
 struct dbs_game
 {
@@ -23,13 +28,13 @@ struct dbs_game
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr);
 void *dbf_destroy(struct dbs_game *game);
 
-void dbf_setpointx(struct dbs_game *game,unsigned int x,unsigned int y);
-void dbf_setpointy(struct dbs_game *game,unsigned int x,unsigned int y);
+void dbf_setpointx(struct dbs_game *game,struct dbs_point *point);
+void dbf_setpointy(struct dbs_game *game,struct dbs_point *point);
 
-int dbf_setlinepoint(struct dbs_game *game,unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2);
+int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line);
 
-void dbf_getpointx(struct dbs_game *game,unsigned int linenum,struct dbs_point *p1,struct dbs_point *p2);
-void dbf_getpointy(struct dbs_game *game,unsigned int linenum,struct dbs_point *p1,struct dbs_point *p2);
+void dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,struct dbs_line *line);
+void dbf_getpointliney(struct dbs_game *game,unsigned int linenum,struct dbs_line *line);
 
 int dbf_setlinex(struct dbs_game *game,unsigned int linenum);
 int dbf_setliney(struct dbs_game *game,unsigned int linenum);

@@ -7,6 +7,7 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	unsigned int x,y;
 	game->playername=playername;
 	game->sqr=sqr;
+	game->count=0;
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
 	
@@ -103,13 +104,13 @@ int dbf_rand(void)
 {
 #ifdef _DEVRAND_
         FILE           *fp;
-        int             i;
+        int             i,j,k;
         fp = fopen(DEVRAND, "rb");
         if (!fp)
                 return 0;
-
-        ((char *)&i)[0] = fgetc(fp);
-        ((char *)&i)[1] = fgetc(fp);
+		for(k=0,j=sizeof(char);j<sizeof(i);j+=sizeof(char),k++)
+        ((char *)&i)[k] = fgetc(fp);
+	
         fclose(fp);
         return i;
 #else
@@ -120,4 +121,23 @@ int dbf_rand(void)
 int dbf_random (int min, int max)
 {
   return min <= max ? min + (dbf_rand () % (max - min + 1)) : -1;
+}
+
+int dbf_countsqr(struct dbs_game *game)
+{
+	unsigned int x,y,count;
+	count=game->count;
+	for(y=0;y<game->sqr;y++)
+	{
+		for(x=0;x<game->sqr;x++)
+		{
+			if(game->point[y*(game->sqr+1)+x].stampx==STAMP && game->point[y*(game->sqr+1)+x+1].stampx==STAMP &&\
+			   game->point[(y+1)*(game->sqr+1)+x].stampx==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].stampx==STAMP &&\
+			   game->point[y*(game->sqr+1)+x].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x].stampy==STAMP &&\
+			   game->point[y*(game->sqr+1)+x+1].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].stampy==STAMP
+			   )
+			   game->count++;
+		}
+	}
+return game->count-count;	
 }

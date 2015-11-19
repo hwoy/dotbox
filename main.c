@@ -6,35 +6,23 @@
 
 int main(void)
 {
-	unsigned int x,y;
+	unsigned int x,y,i;
 	struct dbs_game game;
 	dbf_init(&game,"Hwoy",D_SQR+1);
-	/*
-	for(y=0;y<game.sqr+1;y++)
-	{
-		for(x=0;x<game.sqr+1;x++)
-		{
-			printf("%u,%u,%u\t",game.point[y*(game.sqr+1)+x].stamp,game.point[y*(game.sqr+1)+x].y,game.point[y*(game.sqr+1)+x].x);
-		}
-		putchar('\n');
-	}
-	*/
-/*
-	for(y=0;y<game.sqr+1;y++)
-	{
-		for(x=0;x<game.sqr+1;x++)
-		{
-			game.point[y*(game.sqr+1)+x].stamp=STAMP;
-		}
-	}
-*/
-dbf_setlinex(&game,0);
-dbf_setlinex(&game,3);
-dbf_setlinex(&game,4);
 
-dbf_setliney(&game,0);
-	printTable(&game,LEN);
 	
+for(i=0;i<game.sqr*(game.sqr);i++)
+{
+	dbf_setlinex(&game,i);
+	dbf_setliney(&game,i);
+}
+printTable(&game,LEN);
+dbf_countsqr(&game);
+printf("\nsqr count = %u\n",game.count);
+
+
+
+
 	dbf_destroy(&game);
 	return 0;
 }

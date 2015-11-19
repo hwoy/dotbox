@@ -16,6 +16,7 @@ struct dbs_game
 {
 	const char *playername;
 	unsigned int sqr;
+	unsigned int count;
 	struct dbs_point *point;
 };
 
@@ -36,6 +37,8 @@ int dbf_setliney(struct dbs_game *game,unsigned int linenum);
 void dbf_srandom (void);
 int dbf_rand(void);
 int dbf_random (int min, int max);
+
+int dbf_countsqr(struct dbs_game *game);
 
 
 #ifdef _DEVRAND_

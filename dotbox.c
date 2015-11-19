@@ -146,3 +146,73 @@ int dbf_countsqr(struct dbs_game *game)
 	}
 return game->count-count;	
 }
+
+int dbf_getremain_one_line(struct dbs_game *game,struct dbs_line *line)
+{
+	unsigned int x,y,i,j,flag;
+	for(y=0;y<game->sqr;y++)
+	{
+		for(x=0;x<game->sqr;x++)
+		{
+			flag=0;
+			for(i=0;i<2;i++)
+			{
+				if(game->point[(y+i)*(game->sqr+1)+x].stampx==STAMP && game->point[(y+i)*(game->sqr+1)+x+1].stampx==STAMP)
+					flag|=POW2A(i);
+			}
+			
+			for(i=0;i<2;i++)
+			{
+				if(game->point[y*(game->sqr+1)+x+i].stampy==STAMP && game->point[(y+1)*(game->sqr+1)+x+i].stampy==STAMP)
+					flag|=POW2A(i+2);
+			}
+			
+			if(dbf_countbit(flag)==(4-1))
+			{
+				switch(j=dbf_postzerobit(flag))
+				{
+					case 0:
+					case 1:
+					line->p1.x=x;
+					line->p1.y=y+j;
+					line->p2.x=x+1;
+					line->p2.y=y+j;
+					break;
+					case 2:
+					case 3:
+					line->p1.x=x+j-2;
+					line->p1.y=y;
+					line->p2.x=x+j-2;
+					line->p2.y=y+1;
+					break;
+				}
+				return 1;
+			}
+			
+
+		}
+	}
+	return 0;
+}
+
+unsigned int dbf_countbit(unsigned int num)
+{
+	unsigned int i,j;
+	for(j=0,i=0;i<(sizeof(int)*8);i++)
+	{
+		if(num&POW2A(i)) j++;
+	}
+	
+	return j;
+}
+
+int dbf_postzerobit(unsigned int num)
+{
+	unsigned int i;
+	for(i=0;i<(sizeof(int)*8);i++)
+	{
+		if(!(num&POW2A(i))) return i;
+	}
+	
+	return -1;
+}

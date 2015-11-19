@@ -55,6 +55,7 @@ unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsig
 
 unsigned int dbf_countbit(unsigned int num);
 int dbf_postzerobit(unsigned int num);
+int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
 
 #ifdef _DEVRAND_

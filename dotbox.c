@@ -241,3 +241,19 @@ int dbf_postzerobit(unsigned int num)
 	
 	return -1;
 }
+
+int dbf_issetline(struct dbs_game *game,struct dbs_line *line)
+{
+	if(line->p1.y==line->p2.y)
+	{
+		if(game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x==STAMP && game->point[line->p2.y*(game->sqr+1)+line->p2.x+1].prev_x==STAMP)
+			return 1;
+	}
+	else if(line->p1.x==line->p2.x)
+	{
+		if(game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_y==STAMP && game->point[(line->p2.y+1)*(game->sqr+1)+line->p2.x].prev_y==STAMP)
+			return 2;
+	}
+	
+	return 0;
+}

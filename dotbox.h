@@ -1,5 +1,3 @@
-#define D_SQR 2
-#define D_DOT (D_SQR+1)
 #define STAMP 1
 #define UNSTAMP (!STAMP)
 
@@ -19,12 +17,19 @@ struct dbs_line
 	struct dbs_point p2;
 };
 
+struct dbs_player
+{
+	const char *name;
+	unsigned int score;
+	
+};
+
 struct dbs_game
 {
 	const char *playername;
 	unsigned int sqr;
-	unsigned int p1score,p2score;
 	struct dbs_point *point;
+	struct dbs_player player[2];
 	int (*ai)(struct dbs_game *game,struct dbs_line *line);
 };
 
@@ -62,7 +67,7 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
 int dbf_ai(struct dbs_game *game,struct dbs_line *line);
 
-int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,unsigned int *score);
+int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player);
 
 int dbf_isgameover(struct dbs_game *game);
 
@@ -74,5 +79,9 @@ enum
 };
 
 #ifdef _DEVRAND_
-const char DEVRAND[]="/dev/urandom";
+static const char DEVRAND[]="/dev/urandom";
+#endif
+
+#ifdef _COMNAME_
+static const char *COMNAME[]={"John_C","Sarah_C","Victor_C",NULL} ;
 #endif

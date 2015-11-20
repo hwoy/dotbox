@@ -5,16 +5,21 @@
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr)
 {
-	unsigned int x,y;
+	unsigned int x,y,i;
 	
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
 	
 	dbf_srandom(time(NULL));
-	game->playername=playername;
+	game->player[0].name=playername;
+	game->player[0].score=0;
+	
+	for(i=0;COMNAME[i];i++);
+	
+	if(i)game->player[1].name=COMNAME[dbf_random(0,i-1)];
+	game->player[1].score=0;	
+	
 	game->sqr=sqr;
-	game->p1score=0;
-	game->p2score=0;
 	game->ai=dbf_ai;
 	
 	for(y=0;y<game->sqr+1;y++)
@@ -325,14 +330,14 @@ int dbf_ai(struct dbs_game *game,struct dbs_line *line)
 	return ai_invalid;
 }
 
-int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,unsigned int *score)
+int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player)
 {
 	int result;
 	unsigned int count;
 	
 	count=dbf_countsqr(game);
 	if((result=dbf_setlinepoint(game,line))<0) return result;
-	if(dbf_countsqr(game) > count) *score += dbf_countsqr(game)-count;
+	if(dbf_countsqr(game) > count) player->score += dbf_countsqr(game)-count;
 	
 	return dbf_isgameover(game);
 }

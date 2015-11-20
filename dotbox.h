@@ -61,8 +61,10 @@ unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsig
 
 unsigned int dbf_countbit(unsigned int num);
 int dbf_postzerobit(unsigned int num);
-int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
+/*
+int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
+*/
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
 int dbf_ai(struct dbs_game *game,struct dbs_line *line);
@@ -75,7 +77,7 @@ int dbf_isgameover(struct dbs_game *game);
 
 enum
 {
-	gp_gameover=-5,gp_gamenormal=-4,gp_invline=-3,gp_invx=-4,gp_invy=-5,ai_errmalloc=-2,ai_invalid=-1,ai_best=0,ai_worse=1,ai_random=2
+	gp_gameover=-7,gp_gamenormal=-6,gp_invline=-5,gp_invx=-4,gp_invy=-3,ai_invalid=-2,ai_errmalloc=-1,ai_best=0,ai_worse=1,ai_random=2
 };
 
 #ifdef _DEVRAND_

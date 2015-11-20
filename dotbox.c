@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include "dotbox.h"
 
@@ -85,6 +86,7 @@ int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x==STAMP &&  \
 		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_x==STAMP) return gp_invx;
 		
+		
 		dbf_setpoint_next_x(game,&line->p1);
 		dbf_setpoint_prev_x(game,&line->p2);
 
@@ -135,7 +137,6 @@ struct dbs_line *dbf_getpointliney(struct dbs_game *game,unsigned int linenum,st
 	line->p2.prev_y=game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_y;
 	
 
-	
 	return line;
 }
 
@@ -279,21 +280,23 @@ int dbf_postzerobit(unsigned int num)
 	return -1;
 }
 
+/*
 int dbf_issetline(struct dbs_game *game,struct dbs_line *line)
 {
 	if(line->p1.y==line->p2.y)
 	{
-		if(game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x==STAMP && game->point[line->p2.y*(game->sqr+1)+line->p2.x+1].prev_x==STAMP)
+		if(game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x==STAMP && game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_x==STAMP)
 			return 1;
 	}
 	else if(line->p1.x==line->p2.x)
 	{
-		if(game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_y==STAMP && game->point[(line->p2.y+1)*(game->sqr+1)+line->p2.x].prev_y==STAMP)
+		if(game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_y==STAMP && game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_y==STAMP)
 			return 2;
 	}
 	
 	return 0;
 }
+*/
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
 {
@@ -345,6 +348,8 @@ int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *
 	
 	count=dbf_countsqr(game);
 	if((result=dbf_setlinepoint(game,line))<0) return result;
+	
+	
 	if(dbf_countsqr(game) > count) player->score += dbf_countsqr(game)-count;
 	
 	return dbf_isgameover(game);

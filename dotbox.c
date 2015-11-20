@@ -29,7 +29,7 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->player[1].score=0;	
 	
 	game->sqr=sqr;
-	game->ai=dbf_ai;
+	game->ai=dbf_aiv1;
 	
 	for(y=0;y<game->sqr+1;y++)
 	{
@@ -309,7 +309,7 @@ struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
 	return dsk;
 }
 
-int dbf_ai(struct dbs_game *game,struct dbs_line *line)
+int dbf_aiv1(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff;
 	unsigned int i,j;

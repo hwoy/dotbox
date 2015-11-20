@@ -137,8 +137,7 @@ do
 	printTable(&game,LEN);
 	putchar('\n');
 	
-	if(pindex==COM) pindex=YOU;
-	else pindex=COM;
+	pindex=!pindex;
 
 }while(j!=gp_gameover);
 

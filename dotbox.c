@@ -1,17 +1,21 @@
 #include <stdlib.h>
+#include <time.h>
 #include "dotbox.h"
 
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr)
 {
 	unsigned int x,y;
-	game->playername=playername;
-	game->sqr=sqr;
-	game->count=0;
-	game->hscore=0;
-	game->cscore=0;
+	
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
+	
+	dbf_srandom(time(NULL));
+	game->playername=playername;
+	game->sqr=sqr;
+	game->p1score=0;
+	game->p2score=0;
+	game->ai=dbf_ai;
 	
 	for(y=0;y<game->sqr+1;y++)
 	{
@@ -61,12 +65,12 @@ void dbf_setpoint_next_y(struct dbs_game *game,struct dbs_point *point)
 int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 {
 	if( ( ((int)(line->p2.x-line->p1.x))>1 || ((int)(line->p2.x-line->p1.x))<-1) && \
-	(((int)(line->p2.y-line->p1.y))>1 || ((int)(line->p2.y-line->p1.y))<-1)) return -1;	
+	(((int)(line->p2.y-line->p1.y))>1 || ((int)(line->p2.y-line->p1.y))<-1)) return gp_invline;	
 	
 	if(line->p1.y==line->p2.y)
 	{
 		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x==STAMP &&  \
-		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_x==STAMP) return -2;
+		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_x==STAMP) return gp_invx;
 		
 		dbf_setpoint_next_x(game,&line->p1);
 		dbf_setpoint_prev_x(game,&line->p2);
@@ -75,7 +79,7 @@ int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 	else if(line->p1.x==line->p2.x)
 	{
 		if( game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_y==STAMP &&  \
-		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_y==STAMP) return -3;
+		game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_y==STAMP) return gp_invy;
 		
 		dbf_setpoint_next_y(game,&line->p1);
 		dbf_setpoint_prev_y(game,&line->p2);
@@ -94,6 +98,12 @@ struct dbs_line *dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,st
 	line->p2.y=line->p1.y;
 	line->p2.x=line->p1.x+1;
 	
+	line->p1.next_x=game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_x;
+	line->p1.prev_x=game->point[line->p1.y*(game->sqr+1)+line->p1.x].prev_x;
+	
+	line->p2.next_x=game->point[line->p2.y*(game->sqr+1)+line->p2.x].next_x;
+	line->p2.prev_x=game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_x;
+	
 	return line;
 }
 
@@ -104,6 +114,14 @@ struct dbs_line *dbf_getpointliney(struct dbs_game *game,unsigned int linenum,st
 	
 	line->p2.x=line->p1.x;
 	line->p2.y=line->p1.y+1;
+	
+	line->p1.next_y=game->point[line->p1.y*(game->sqr+1)+line->p1.x].next_y;
+	line->p1.prev_y=game->point[line->p1.y*(game->sqr+1)+line->p1.x].prev_y;
+	
+	line->p2.next_y=game->point[line->p2.y*(game->sqr+1)+line->p2.x].next_y;
+	line->p2.prev_y=game->point[line->p2.y*(game->sqr+1)+line->p2.x].prev_y;
+	
+
 	
 	return line;
 }
@@ -122,9 +140,9 @@ int dbf_setliney(struct dbs_game *game,unsigned int linenum)
 	return dbf_setlinepoint(game,&line);
 }
 
-void dbf_srandom (void)
+void dbf_srandom (int seed)
 {
-  srand (time (NULL));
+  srand (seed);
 }
 
 
@@ -151,10 +169,10 @@ int dbf_random (int min, int max)
   return min <= max ? min + (dbf_rand () % (max - min + 1)) : -1;
 }
 
-int dbf_countsqr(struct dbs_game *game)
+unsigned int dbf_countsqr(struct dbs_game *game)
 {
 	unsigned int x,y,count;
-	count=game->count;
+	count=0;
 	for(y=0;y<game->sqr;y++)
 	{
 		for(x=0;x<game->sqr;x++)
@@ -164,10 +182,10 @@ int dbf_countsqr(struct dbs_game *game)
 			   game->point[y*(game->sqr+1)+x].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x].prev_y==STAMP &&\
 			   game->point[y*(game->sqr+1)+x+1].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x+1].prev_y==STAMP
 			   )
-			   game->count++;
+			   count++;
 		}
 	}
-return game->count-count;	
+return count;	
 }
 
 unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsigned int rcount)
@@ -280,7 +298,7 @@ int dbf_ai(struct dbs_game *game,struct dbs_line *line)
 	struct dbs_line *lbuff;
 	unsigned int i,j;
 	
-	lbuff=(struct dbs_line *)malloc(sizeof(struct dbs_line)*(game->sqr)*(game->sqr+1)*2);
+	lbuff=(struct dbs_line *)malloc(sizeof(struct dbs_line)* (game->sqr)*(game->sqr) *4);
 	if(!lbuff) return ai_errmalloc;
 	
 	for(j=1;j<=4;j+=2)
@@ -306,3 +324,36 @@ int dbf_ai(struct dbs_game *game,struct dbs_line *line)
 	free(lbuff);
 	return ai_invalid;
 }
+
+int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,unsigned int *score)
+{
+	int result;
+	unsigned int count;
+	
+	count=dbf_countsqr(game);
+	if((result=dbf_setlinepoint(game,line))<0) return result;
+	if(dbf_countsqr(game) > count) *score += dbf_countsqr(game)-count;
+	
+	return dbf_isgameover(game);
+}
+
+int dbf_isgameover(struct dbs_game *game)
+{
+	unsigned int i;
+	struct dbs_line linex,liney;
+	
+	for(i=0;i<(game->sqr)*(game->sqr+1);i++)
+	{
+		dbf_getpointlinex(game,i,&linex);
+		dbf_getpointliney(game,i,&liney);
+		
+		if(	!(linex.p1.next_x==STAMP && linex.p2.prev_x==STAMP) )
+			return gp_gamenormal;
+		
+		if( !(liney.p1.next_y==STAMP && liney.p2.prev_y==STAMP) )
+			return gp_gamenormal;
+	}
+	
+	return gp_gameover;
+}
+

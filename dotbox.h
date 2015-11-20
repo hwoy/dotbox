@@ -23,9 +23,9 @@ struct dbs_game
 {
 	const char *playername;
 	unsigned int sqr;
-	unsigned int count;
-	unsigned int hscore,cscore;
+	unsigned int p1score,p2score;
 	struct dbs_point *point;
+	int (*ai)(struct dbs_game *game,struct dbs_line *line);
 };
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr);
@@ -46,11 +46,11 @@ struct dbs_line *dbf_getpointliney(struct dbs_game *game,unsigned int linenum,st
 int dbf_setlinex(struct dbs_game *game,unsigned int linenum);
 int dbf_setliney(struct dbs_game *game,unsigned int linenum);
 
-void dbf_srandom (void);
+void dbf_srandom (int seed);
 int dbf_rand(void);
 int dbf_random (int min, int max);
 
-int dbf_countsqr(struct dbs_game *game);
+unsigned int dbf_countsqr(struct dbs_game *game);
 
 unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsigned int rcount);
 
@@ -62,12 +62,17 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
 int dbf_ai(struct dbs_game *game,struct dbs_line *line);
 
+int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,unsigned int *score);
+
+int dbf_isgameover(struct dbs_game *game);
+
 
 
 enum
 {
-	ai_errmalloc=-2,ai_invalid=-1,ai_best=0,ai_worse=1,ai_random=2
+	gp_gameover=-5,gp_gamenormal=-4,gp_invline=-3,gp_invx=-4,gp_invy=-5,ai_errmalloc=-2,ai_invalid=-1,ai_best=0,ai_worse=1,ai_random=2
 };
+
 #ifdef _DEVRAND_
 const char DEVRAND[]="/dev/urandom";
 #endif

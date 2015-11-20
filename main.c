@@ -7,26 +7,11 @@
 
 int main(void)
 {
-	unsigned int x,y,i;
 	int n,j;
 	struct dbs_game game;
 	struct dbs_line line;
 	
 	dbf_init(&game,"Hwoy",D_SQR);
-
-dbf_setlinex(&game,3);
-
-dbf_setliney(&game,0);
-dbf_setliney(&game,3);
-
-dbf_setlinex(&game,1);
-dbf_setliney(&game,6);
-
-dbf_setlinex(&game,8);
-dbf_setlinex(&game,11);
-dbf_setliney(&game,8);
-
-dbf_setlinex(&game,2);
 
 
 printTable(&game,LEN);

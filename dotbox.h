@@ -34,7 +34,7 @@ struct dbs_game
 };
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr);
-void *dbf_destroy(struct dbs_game *game);
+void dbf_destroy(struct dbs_game *game);
 
 
 void dbf_setpoint_prev_x(struct dbs_game *game,struct dbs_point *point);

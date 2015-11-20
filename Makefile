@@ -1,6 +1,6 @@
 CC=gcc
 bin=dotbox
-CFLAGS=-O2 -std=c89 -pedantic # -D_DEVRAND_ # for better random numbers
+CFLAGS=-O2 -std=c89 -pedantic -Wall -Werror
 .PHONY: all clean
 
 all: $(bin)

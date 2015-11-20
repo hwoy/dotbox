@@ -38,7 +38,7 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	return game;
 }
 
-void *dbf_destroy(struct dbs_game *game)
+void dbf_destroy(struct dbs_game *game)
 {
 	free(game->point);
 }
@@ -195,7 +195,7 @@ return count;
 
 unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsigned int rcount)
 {
-	unsigned int x,y,i,j,n,flag,count;
+	unsigned int x,y,i,n,flag,count;
 	
 	count=0;
 	for(y=0;y<game->sqr;y++)

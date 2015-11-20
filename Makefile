@@ -13,7 +13,7 @@ clean:
 
 
 dotbox.o: dotbox.c dotbox.h
-	$(CC) $(CFLAGS) -c dotbox.c -D_COMNAME_ # -D_DEVRAND_ # for better random numbers , -D_COMNAME_ # for better random numbers
+	$(CC) $(CFLAGS) -c dotbox.c #-D_COMNAME_ # for better random numbers ,# -D_DEVRAND_ # for better random numbers
 
 dotbox_io.o: dotbox_io.c dotbox.h dotbox_io.h
 

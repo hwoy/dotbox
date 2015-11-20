@@ -6,7 +6,7 @@ static const char CNAME[]="COMPUTER";
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr)
 {
-	unsigned int x,y,i;
+	unsigned int x,y;
 	
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
@@ -19,8 +19,8 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->player[0].score=0;
 	
 	#ifdef _COMNAME_
-		for(i=0;COMNAME[i];i++);
-		game->player[1].name=i?COMNAME[dbf_random(0,i-1)]:CNAME;
+		for(x=0;COMNAME[x];x++);
+		game->player[1].name=x?COMNAME[dbf_random(0,x-1)]:CNAME;
 	#else
 		game->player[1].name=CNAME;
 	#endif

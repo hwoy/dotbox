@@ -7,18 +7,12 @@
 int main(void)
 {
 	unsigned int x,y,i,j;
+	int n;
 	struct dbs_game game;
-	struct dbs_line line[(D_SQR+1)*(D_SQR+1)];
+	struct dbs_line line;
 	
-	dbf_init(&game,"Hwoy",D_SQR+1);
+	dbf_init(&game,"Hwoy",D_SQR+2);
 
-/*	
-for(i=0;i<game.sqr*(game.sqr+1);i++)
-{
-	dbf_setlinex(&game,i);
-	dbf_setliney(&game,i);
-*/
-/*dbf_setlinex(&game,0);*/
 dbf_setlinex(&game,3);
 dbf_setliney(&game,0);
 dbf_setliney(&game,3);
@@ -32,16 +26,18 @@ dbf_setliney(&game,8);
 
 dbf_setlinex(&game,2);
 
+
 printTable(&game,LEN);
-dbf_countsqr(&game);
-printf("\nsqr count = %u\n",game.count);
-i=dbf_getremainline(&game,line,2);
-for(j=0;j<i;j++)
+
+
+while((n=dbf_ai(&game,&line))>-1)
 {
-	dbf_setlinepoint(&game,&line[j]);
-	printf("%u,%u  %u,%u\n",line[j].p1.x,line[j].p1.y,line[j].p2.x,line[j].p2.y);
+	printf("================================");
+	dbf_setlinepoint(&game,&line);
+	printTable(&game,LEN);
+	dbf_setlinepoint(&game,&line);
+	printf("return AI = %d %u,%u  %u,%u\n",n,line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 }
-printTable(&game,LEN);
 
 
 	dbf_destroy(&game);

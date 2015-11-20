@@ -59,6 +59,15 @@ int dbf_postzerobit(unsigned int num);
 int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
 
+struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
+int dbf_ai(struct dbs_game *game,struct dbs_line *line);
+
+
+
+enum
+{
+	ai_errmalloc=-2,ai_invalid=-1,ai_best=0,ai_worse=1,ai_random=2
+};
 #ifdef _DEVRAND_
 const char DEVRAND[]="/dev/urandom";
 #endif

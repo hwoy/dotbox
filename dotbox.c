@@ -263,3 +263,46 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line)
 	
 	return 0;
 }
+
+struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
+{
+	dsk->p1.x=src->p1.x;
+	dsk->p1.y=src->p1.y;
+	
+	dsk->p2.x=src->p2.x;
+	dsk->p2.y=src->p2.y;
+	
+	return dsk;
+}
+
+int dbf_ai(struct dbs_game *game,struct dbs_line *line)
+{
+	struct dbs_line *lbuff;
+	unsigned int i,j;
+	
+	lbuff=(struct dbs_line *)malloc(sizeof(struct dbs_line)*(game->sqr)*(game->sqr+1)*2);
+	if(!lbuff) return ai_errmalloc;
+	
+	for(j=1;j<=4;j+=2)
+	{
+	if((i=dbf_getremainline(game,lbuff,j)))
+	{
+		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
+		free(lbuff);
+		return (j==1)?ai_best:ai_random;
+	}
+	}
+	
+	for(j=4;j>=1;j-=2)
+	{
+	if((i=dbf_getremainline(game,lbuff,j)))
+	{
+		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
+		free(lbuff);
+		return (j==2)?ai_worse:ai_random;
+	}
+	}
+		
+	free(lbuff);
+	return ai_invalid;
+}

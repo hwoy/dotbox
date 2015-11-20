@@ -18,10 +18,14 @@
 
 #define K_QUIT '-'
 #define K_NEW '+'
+#define K_TABLE 't'
+#define K_HELP 'h'
 
 static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line);
 static const char *gameidstr(const char *str[],int id);
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
+static void helpkey(void);
+static void showscore(struct dbs_game *game);
 
 static const char *idstr[]={"Game over","Normal","Invalide line","Invalid line-x","Invalid line-y","AI no more move","Error malloc","AI best move","AI worse move","AI random move",NULL};
 
@@ -46,18 +50,32 @@ do
 {
 	do{
 		
-	if(pindex==COM)
+	switch(pindex)
 	{
-		n=game.ai(&game,&line);
-		printf("AI_ID = %d*(%s)\n",n,gameidstr(idstr,n));
-	}
+		
+	/************************** COM **************************/	
 	
-	else if(pindex==YOU)
-	{
+	case COM:
+	
+		n=game.ai(&game,&line);
+		
+		putchar('\n');
+		printf("\t\t\t");printf("AI_ID = %d*(%s)\n",n,gameidstr(idstr,n));
+		
+	break;
+	
+	/************************** COM **************************/
+	
+	/************************** HUMAN **************************/
+	case YOU:
+	
 		do
 		{
-			
+		putchar('\n');		
 		printf("Enter a line --> ");dio_getch(buff,BSIZE,0);
+		
+		
+		/********************* Key*********************/
 		
 		if(sLen(buff)==1)
 		{
@@ -70,12 +88,29 @@ do
 				case K_QUIT:
 				if(answer("(y/n)--> ",buff,BSIZE,YES)==YES) goto QUIT_GAME;
 				else  break;
+				
+				case K_HELP:
+				helpkey();
+				break;
+				
+				case K_TABLE:
+				putchar('\n');
+				showscore(&game);
+				putchar('\n');
+				
+				putchar('\n');
+				printTable(&game,LEN);
+				putchar('\n');
+				break;
 			}
 		}
 			
+		/********************* Key*********************/
 		
 		}while(cropui(&game,buff,&line)<0);
 		
+	break;
+	/************************** HUMAN **************************/
 	}
 	
 		j=dbf_gameplay(&game,&line,&game.player[pindex]);
@@ -85,16 +120,18 @@ do
 			continue;
 		}
 		
+		if(pindex==COM) printf("\t\t\t");
 		printf("%s: (%u,%u) (%u,%u)\n",game.player[pindex].name,line.p1.x,line.p1.y,line.p2.x,line.p2.y);
+		
+		if(pindex==COM) printf("\t\t\t");
 		printf("GP_ID = %d*(%s)\n",j,gameidstr(idstr,j));
 		
 		
 	}while( j>=gp_invline && j<=ai_invalid );
 	
 	putchar('\n');
-	printf("%s:Score= %u",game.player[YOU].name,game.player[YOU].score);
-	printf(" <--VS--> ");
-	printf("%u =Score:%s\n",game.player[COM].score,game.player[COM].name);
+	showscore(&game);
+	putchar('\n');
 	
 	putchar('\n');
 	printTable(&game,LEN);
@@ -156,3 +193,20 @@ static char answer(const char *str,char *buff,unsigned int bsize,char dkey)
 	return buff[0];
 }
 
+static void helpkey(void)
+{
+	putchar('\n');
+	printf("\t%c:\t NEW GAME\n",K_NEW);
+	printf("\t%c:\t QUIT GAME\n",K_QUIT);
+	printf("\t%c:\t SHOW HELP\n",K_HELP);
+	printf("\t%c:\t SHOW TABLE\n",K_TABLE);
+	putchar('\n');
+}
+
+static void showscore(struct dbs_game *game)
+{
+	printf("%s:Score= %u",game->player[YOU].name,game->player[YOU].score);
+	printf(" <--VS--> ");
+	printf("%u =Score:%s\n",game->player[COM].score,game->player[COM].name);
+
+}

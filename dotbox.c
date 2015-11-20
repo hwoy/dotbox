@@ -2,6 +2,7 @@
 #include <time.h>
 #include "dotbox.h"
 
+static const char CNAME[]="COMPUTER";
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr)
 {
@@ -17,9 +18,13 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->player[0].name=playername;
 	game->player[0].score=0;
 	
-	for(i=0;COMNAME[i];i++);
+	#ifdef _COMNAME_
+		for(i=0;COMNAME[i];i++);
+		game->player[1].name=i?COMNAME[dbf_random(0,i-1)]:CNAME;
+	#else
+		game->player[1].name=CNAME;
+	#endif
 	
-	if(i)game->player[1].name=COMNAME[dbf_random(0,i-1)];
 	game->player[1].score=0;	
 	
 	game->sqr=sqr;

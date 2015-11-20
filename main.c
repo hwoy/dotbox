@@ -13,8 +13,15 @@
 #define PREFIX_X 'x'
 #define PREFIX_Y 'y'
 
+#define YES 'y'
+#define NO 'n'
+
+#define K_QUIT '-'
+#define K_NEW '+'
+
 static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line);
 static const char *gameidstr(const char *str[],int id);
+static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 
 static const char *idstr[]={"Game over","Normal","Invalide line","Invalid line-x","Invalid line-y","AI no more move","Error malloc","AI best move","AI worse move","AI random move",NULL};
 
@@ -27,6 +34,7 @@ int main(void)
 	
 	static char buff[BSIZE+1];
 	
+NEW_GAME:	
 	dbf_init(&game,"YOU",D_SQR);
 	pindex=dbf_random(0,1);
 
@@ -48,7 +56,24 @@ do
 	{
 		do
 		{
-		dio_getch(buff,BSIZE,0);
+			
+		printf("Enter a line --> ");dio_getch(buff,BSIZE,0);
+		
+		if(sLen(buff)==1)
+		{
+			switch(buff[0])
+			{
+				case K_NEW:
+				dbf_destroy(&game);
+				goto NEW_GAME;
+				
+				case K_QUIT:
+				if(answer("(y/n)--> ",buff,BSIZE,YES)==YES) goto QUIT_GAME;
+				else  break;
+			}
+		}
+			
+		
 		}while(cropui(&game,buff,&line)<0);
 		
 	}
@@ -81,6 +106,7 @@ do
 }while(j!=gp_gameover);
 
 
+QUIT_GAME:
 	dbf_destroy(&game);
 	return 0;
 }
@@ -111,5 +137,22 @@ static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line)
 static const char *gameidstr(const char *str[],int id)
 {
 	return str[id+7];
+}
+
+static char answer(const char *str,char *buff,unsigned int bsize,char dkey)
+{
+	do
+	{
+	printf("%s",str);
+	dio_getch(buff,bsize,0);
+	if(!sLen(buff))
+	{
+		buff[0]=dkey;
+		buff[1]=0;
+	}
+		
+	}while(!((sLen(buff)==1)&&(buff[0]==YES || buff[0]==NO)));
+		
+	return buff[0];
 }
 

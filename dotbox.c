@@ -10,7 +10,10 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
 	
+	#ifndef _DEVRAND_
 	dbf_srandom(time(NULL));
+	#endif
+	
 	game->player[0].name=playername;
 	game->player[0].score=0;
 	

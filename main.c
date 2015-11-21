@@ -26,7 +26,8 @@
 
 #define NGPID 7
 
-static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line);
+static int cropui_key(struct dbs_game *game,const char *str,struct dbs_line *line);
+static int _cropui(const char *str,char ch,unsigned int *num);
 static const char *gameidstr(const char *str[],int id);
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(void);
@@ -113,7 +114,7 @@ do
 		}
 			
 		
-		}while(cropui(&game,buff,&line)<0);
+		}while(cropui_key(&game,buff,&line)<0);
 		
 	break;
 	}
@@ -188,33 +189,46 @@ QUIT_GAME:
 
 
 
-static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line)
+static int cropui_key(struct dbs_game *game,const char *str,struct dbs_line *line)
 {
 	unsigned int x,y;
+	int i;
 	if(str[0]==PREFIX_X)
 	{
-		if(!isUint(&str[1])) return -1;
-		x=s2ui(&str[1]);
 		
-		if(x>=game->sqr*(game->sqr+1)) return -2;
+		if((i=_cropui(str,PREFIX_X,&x))<0) return i;
+		
+		if(x>=game->sqr*(game->sqr+1)) return -3;
 			
 		dbf_getpointlinex(game,x,line);
 	}
 	else if(str[0]==PREFIX_Y)
 	{
-		if(!isUint(&str[1])) return -1;
-		y=s2ui(&str[1]);
+		if((i=_cropui(str,PREFIX_Y,&y))<0) return i;
 		
-		if(y>=game->sqr*(game->sqr+1)) return -3;
+		if(y>=game->sqr*(game->sqr+1)) return -4;
 		
 		dbf_getpointliney(game,y,line);
 	}
 	else
 	{
-		return -4;
+		return -5;
 	}
 	
 	return 1;
+}
+
+static int _cropui(const char *str,char ch,unsigned int *num)
+{
+	unsigned int x,y;
+	if(str[0]==ch)
+	{
+		if(!isUint(&str[1])) return -1;
+		*num=s2ui(&str[1]);
+		return 1;
+	}
+	
+	return -2;
 }
 
 static const char *gameidstr(const char *str[],int id)

@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <time.h>
 #include "dotbox.h"
 
@@ -31,24 +30,16 @@ static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned in
 		}
 		if(!k)
 		{
-				tbuff[count].p1.x=lbuff[j].p1.x;
-				tbuff[count].p1.y=lbuff[j].p1.y;
-				
-				tbuff[count].p2.x=lbuff[j].p2.x;
-				tbuff[count].p2.y=lbuff[j].p2.y;
-				
-				count++;
+			dbf_copyline(&tbuff[count],&lbuff[j]);	
+			count++;
 		}				
 		
 	}
 	
 	for(i=0;i<count;i++)
 	{
-				lbuff[i].p1.x=tbuff[i].p1.x;
-				lbuff[i].p1.y=tbuff[i].p1.y;
-				
-				lbuff[i].p2.x=tbuff[i].p2.x;
-				lbuff[i].p2.y=tbuff[i].p2.y;		
+		dbf_copyline(&lbuff[i],&tbuff[i]);
+		
 	}
 	
 	*nbuff=count;
@@ -57,7 +48,7 @@ static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned in
 }
 
 
-struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr)
+struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr,dbv_ai ai)
 {
 	unsigned int x,y;
 	
@@ -81,7 +72,7 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->player[1].score=0;	
 	
 	game->sqr=sqr;
-	game->ai=dbf_aiv2;
+	game->ai=ai;
 	
 	for(y=0;y<game->sqr+1;y++)
 	{
@@ -310,33 +301,6 @@ unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsig
 	return count;
 }
 
-/*
-unsigned int dbf_getblankline(struct dbs_game *game)
-{
-unsigned int x,y,count;	
-
-count=0;
-	for(y=0;y<game->sqr+1;y++)
-	{
-		for(x=0;x<game->sqr;x++)
-		{
-				if(game->point[y*(game->sqr+1)+x].next_x==UNSTAMP && game->point[y*(game->sqr+1)+x+1].prev_x==UNSTAMP)	
-				count++;
-		}
-	}
-	
-	for(x=0;x<game->sqr+1;x++)
-	{
-		for(y=0;y<game->sqr;y++)
-		{
-				if(game->point[y*(game->sqr+1)+x].next_y==UNSTAMP && game->point[(y+1)*(game->sqr+1)+x].prev_y==UNSTAMP)
-				count++;
-		}
-	}
-	
-	return count;
-}
-*/
 
 unsigned int dbf_countbit(unsigned int num)
 {
@@ -360,7 +324,7 @@ int dbf_postzerobit(unsigned int num)
 	return -1;
 }
 
-/*
+
 int dbf_issetline(struct dbs_game *game,struct dbs_line *line)
 {
 	if(line->p1.y==line->p2.y)
@@ -376,7 +340,7 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line)
 	
 	return 0;
 }
-*/
+
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
 {
@@ -445,7 +409,14 @@ int dbf_aiv2(struct dbs_game *game,struct dbs_line *line)
 		if(j==3)
 		{
 			
-			if(!rmremainline2(lbuff,tmp,&i,k) || !i) i=dbf_getremainline(game,lbuff,j);
+			if(!rmremainline2(lbuff,tmp,&i,k))
+			{
+				free(tmp);
+				free(lbuff);
+				return ai_errmalloc;
+			}
+			
+			if(!i) i=dbf_getremainline(game,lbuff,j);
 
 		}
 
@@ -463,7 +434,14 @@ int dbf_aiv2(struct dbs_game *game,struct dbs_line *line)
 	{
 		if(j==4)
 		{
-				if(!rmremainline2(lbuff,tmp,&i,k) || !i) i=dbf_getremainline(game,lbuff,j);
+			if(!rmremainline2(lbuff,tmp,&i,k))
+			{
+				free(tmp);
+				free(lbuff);
+				return ai_errmalloc;
+			}
+			
+			if(!i) i=dbf_getremainline(game,lbuff,j);
 
 		}
 

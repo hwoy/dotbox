@@ -3,6 +3,7 @@
 
 #define POW2A(x) (1<<(x))
 
+
 struct dbs_point
 {
 	unsigned int prev_x,next_x;
@@ -33,7 +34,9 @@ struct dbs_game
 	int (*ai)(struct dbs_game *game,struct dbs_line *line);
 };
 
-struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr);
+typedef int (*dbv_ai)(struct dbs_game *game,struct dbs_line *line);
+
+struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr,dbv_ai ai);
 void dbf_destroy(struct dbs_game *game);
 
 
@@ -59,14 +62,13 @@ unsigned int dbf_countsqr(struct dbs_game *game);
 
 unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsigned int rcount);
 
-/*unsigned int dbf_getblankline(struct dbs_game *game);*/
 
 unsigned int dbf_countbit(unsigned int num);
 int dbf_postzerobit(unsigned int num);
 
-/*
+
 int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
-*/
+
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
 int dbf_aiv1(struct dbs_game *game,struct dbs_line *line);

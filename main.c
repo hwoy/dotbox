@@ -37,13 +37,19 @@ static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid l
 "AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
-int main(void)
+static const char *key[]={"x:","y:","-","+","t","h",NULL};
+enum
 {
-	int n,j;
+	k_x,k_y,k_quit,k_new,k_tab,k_help
+};
+
+int main(int argc, const char *argv[])
+{
+	int i,n,gpid;
 	unsigned int pindex;
+	unsigned int ui_cindex;
 	struct dbs_game game;
 	struct dbs_line line;
-	
 	static char buff[BSIZE+1];
 	
 NEW_GAME:	
@@ -125,7 +131,7 @@ do
 	
 	
 	
-		j=dbf_gameplay(&game,&line,&game.player[pindex]);
+		gpid=dbf_gameplay(&game,&line,&game.player[pindex]);
 		
 	
 
@@ -133,20 +139,20 @@ do
 
 	
 		/************** Fatal Error(GP)(Require quit game) **************/
-		switch(j)
+		switch(gpid)
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			printf("Error:%s\n",gameidstr(idstr,j));
+			printf("Error:%s\n",gameidstr(idstr,gpid));
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
 		
 		
 		/************** Tiny Error(GP) **************/
-		if(j<=gp_invy) 
+		if(gpid<=gp_invy) 
 		{
-			printf("Error:%s\n",gameidstr(idstr,j));
+			printf("Error:%s\n",gameidstr(idstr,gpid));
 			continue;
 		}
 		/************** Tiny Error(GP) **************/
@@ -158,10 +164,10 @@ do
 		printf("%s: (%u,%u) (%u,%u)\n",game.player[pindex].name,line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
 		if(pindex==COM) PRINTTAB();
-		printf("GP_ID = %d*(%s)\n",j,gameidstr(idstr,j));
+		printf("GP_ID = %d*(%s)\n",gpid,gameidstr(idstr,gpid));
 		
 		
-	}while( j<gp_gameover);
+	}while( gpid<gp_gameover);
 	
 	putchar('\n');
 	showscore(&game);
@@ -173,7 +179,7 @@ do
 	
 	pindex=!pindex;
 
-}while(j!=gp_gameover);
+}while(gpid!=gp_gameover);
 
 
 QUIT_GAME:

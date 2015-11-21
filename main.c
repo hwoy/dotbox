@@ -27,7 +27,9 @@ static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(void);
 static void showscore(struct dbs_game *game);
 
-static const char *idstr[]={"Game over","Normal","Invalide line","Invalid line-x","Invalid line-y","AI no more move","Error malloc","AI best move","AI worse move","AI random move",NULL};
+static const char *idstr[]={"Invalide line","Invalid line-x","Invalid line-y",\
+"AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
+NULL};
 
 int main(void)
 {
@@ -114,11 +116,26 @@ do
 	}
 	
 		j=dbf_gameplay(&game,&line,&game.player[pindex]);
-		if(j>=gp_invline && j<=ai_invalid) 
+		
+		
+		/************** Fatal Error **************/
+		switch(j)
+		{
+			case ai_errmalloc:
+			case ai_nomove:
+			printf("Error:%s\n",gameidstr(idstr,j));
+			goto QUIT_GAME;
+		}
+		/************** Fatal Error **************/
+		
+		
+		/************** Tiny Error **************/
+		if(j<=gp_invy) 
 		{
 			printf("Error:%s\n",gameidstr(idstr,j));
 			continue;
 		}
+		/************** Tiny Error **************/
 		
 		if(pindex==COM) printf("\t\t\t");
 		printf("%s: (%u,%u) (%u,%u)\n",game.player[pindex].name,line.p1.x,line.p1.y,line.p2.x,line.p2.y);
@@ -127,7 +144,7 @@ do
 		printf("GP_ID = %d*(%s)\n",j,gameidstr(idstr,j));
 		
 		
-	}while( j>=gp_invline && j<=ai_invalid );
+	}while( j<gp_gameover);
 	
 	putchar('\n');
 	showscore(&game);

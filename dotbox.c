@@ -382,7 +382,7 @@ int dbf_aiv1(struct dbs_game *game,struct dbs_line *line)
 	}
 		
 	free(lbuff);
-	return ai_invalid;
+	return ai_nomove;
 }
 
 int dbf_aiv2(struct dbs_game *game,struct dbs_line *line)
@@ -455,7 +455,7 @@ int dbf_aiv2(struct dbs_game *game,struct dbs_line *line)
 	
 	free(tmp);
 	free(lbuff);
-	return ai_invalid;
+	return ai_nomove;
 }
 
 int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player)

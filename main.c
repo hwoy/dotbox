@@ -220,7 +220,6 @@ static int cropui_key(struct dbs_game *game,const char *str,struct dbs_line *lin
 
 static int _cropui(const char *str,char ch,unsigned int *num)
 {
-	unsigned int x,y;
 	if(str[0]==ch)
 	{
 		if(!isUint(&str[1])) return -1;

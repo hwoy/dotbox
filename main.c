@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "dotbox.h"
 #include "dotbox_io.h"
 #include "function.h"
@@ -26,18 +27,17 @@
 
 #define NGPID 7
 
-static int cropui_key(struct dbs_game *game,const char *str,struct dbs_line *line);
-static int _cropui(const char *str,char ch,unsigned int *num);
 static const char *gameidstr(const char *str[],int id);
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(void);
 static void showscore(struct dbs_game *game);
+static int key_option(const char *str,const char *key[],char *buff);
 
 static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
 "AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
-static const char *key[]={"x:","y:","-","+","t","h",NULL};
+static const char *key[]={"x","y","-","+","t","h",NULL};
 enum
 {
 	k_x,k_y,k_quit,k_new,k_tab,k_help
@@ -48,9 +48,10 @@ int main(int argc, const char *argv[])
 	int i,n,gpid;
 	unsigned int pindex;
 	unsigned int ui_cindex;
+	unsigned int x,y;
 	struct dbs_game game;
 	struct dbs_line line;
-	static char buff[BSIZE+1];
+	static char buff[BSIZE+1],carray_buff[BSIZE];
 	
 NEW_GAME:	
 	dbf_init(&game,"YOU",D_SQR+1,dbf_aiv2);
@@ -84,43 +85,53 @@ do
 		do
 		{
 		putchar('\n');		
-		printf("Enter a line --> ");dio_getch(buff,BSIZE,0);
+		printf("Enter a line --> ");
+		
+		dio_getstr(buff,BSIZE);
+		
+		i=key_option(buff,key,carray_buff);
+	  switch(i)
+	  {
+		  case k_x:
+		if(!isUint(carray_buff)) continue;
+		x=s2ui(carray_buff);
+		if(x>=game.sqr*(game.sqr+1)) continue;	
+		dbf_getpointlinex(&game,x,&line);
+		break;
 		
 		
-		
-		if(sLen(buff)==1)
-		{
-			/********************* Key*********************/
-			switch(buff[0])
-			{
-				case K_NEW:
-				dbf_destroy(&game);
-				goto NEW_GAME;
-				
-				case K_QUIT:
-				if(answer("(Y/n)--> ",buff,BSIZE,YES)==YES) goto QUIT_GAME;
-				else  break;
-				
-				case K_HELP:
-				helpkey();
-				break;
-				
-				case K_TABLE:
-				putchar('\n');
-				showscore(&game);
-				putchar('\n');
-				
-				putchar('\n');
-				printTable(&game,LEN);
-				putchar('\n');
-				break;
-			}
+		  case k_y:
+		if(!isUint(carray_buff)) continue;
+		y=s2ui(carray_buff);
+		if(y>=game.sqr*(game.sqr+1)) continue;
+		dbf_getpointliney(&game,y,&line);		  
+		  break;
+		  
+		  case k_new:
+		dbf_destroy(&game);
+		goto NEW_GAME;
+		  
+		  case k_tab:
+		putchar('\n');
+		showscore(&game);
+		putchar('\n');
+	
+		putchar('\n');
+		printTable(&game,LEN);
+		putchar('\n');
+		break;			
+		 
+		  case k_quit:
+		if(answer("Do you want to quit this game?\n(Y/n)",buff,BSIZE,YES)==YES)
+			goto QUIT_GAME;
+		break;
+		  
+	  }
+	  
+
 			
-			/********************* Key*********************/
-		}
-			
 		
-		}while(cropui_key(&game,buff,&line)<0);
+		}while( i!=k_x && i!=k_y );
 		
 	break;
 	}
@@ -195,46 +206,8 @@ QUIT_GAME:
 
 
 
-static int cropui_key(struct dbs_game *game,const char *str,struct dbs_line *line)
-{
-	unsigned int x,y;
-	int i;
-	if(str[0]==PREFIX_X)
-	{
-		
-		if((i=_cropui(str,PREFIX_X,&x))<0) return i;
-		
-		if(x>=game->sqr*(game->sqr+1)) return -3;
-			
-		dbf_getpointlinex(game,x,line);
-	}
-	else if(str[0]==PREFIX_Y)
-	{
-		if((i=_cropui(str,PREFIX_Y,&y))<0) return i;
-		
-		if(y>=game->sqr*(game->sqr+1)) return -4;
-		
-		dbf_getpointliney(game,y,line);
-	}
-	else
-	{
-		return -5;
-	}
-	
-	return 1;
-}
 
-static int _cropui(const char *str,char ch,unsigned int *num)
-{
-	if(str[0]==ch)
-	{
-		if(!isUint(&str[1])) return -1;
-		*num=s2ui(&str[1]);
-		return 1;
-	}
-	
-	return -2;
-}
+
 
 static const char *gameidstr(const char *str[],int id)
 {
@@ -274,4 +247,23 @@ static void showscore(struct dbs_game *game)
 	printf(" <--VS--> ");
 	printf("%u =Score:%s\n",game->player[COM].score,game->player[COM].name);
 
+}
+
+static int key_option(const char *str,const char *key[],char *buff)
+{
+	unsigned int i,j,k;
+	for(i=0;key[i];i++)
+	{
+		if(!strncmp(key[i],str,strlen(key[i])))
+		{
+			for(k=0,j=strlen(key[i]);str[j];j++,k++)
+			{
+				buff[k]=str[j];
+			}
+			buff[k]=0;
+			return i;
+		}
+	}
+	
+	return -1;
 }

@@ -66,6 +66,17 @@ char dio_getch(char *buff,int size,char dkey)
 		
 }
 
+char *dio_getstr(char *buff,int size)
+{
+		
+	fgets(buff,size,stdin);
+	replacech(buff,13,0);
+	replacech(buff,10,0);
+	
+	return buff;
+		
+}
+
 static void replacech(char *str,char ch,char rp)
 {
 	int i;

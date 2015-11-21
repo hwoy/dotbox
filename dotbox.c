@@ -3,7 +3,59 @@
 #include <time.h>
 #include "dotbox.h"
 
+static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned int *nbuff,unsigned int ntmp);
+
+
+
 static const char CNAME[]="COMPUTER";
+
+
+static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned int *nbuff,unsigned int ntmp)
+{
+	unsigned int i,j,k,count;
+	struct dbs_line *tbuff;
+	
+	tbuff=(struct dbs_line *)malloc(sizeof(struct dbs_line)*(*nbuff));
+	if(!tbuff) return 0;
+	
+	
+	count=0;
+	for(j=0;j<(*nbuff);j++)
+	{
+		for(k=0,i=0;i<ntmp;i++)
+		{
+			if(lbuff[j].p1.x==tmp[i].p1.x && lbuff[j].p1.y==tmp[i].p1.y && lbuff[j].p2.x==tmp[i].p2.x && lbuff[j].p2.y==tmp[i].p2.y)
+			{
+				k++;
+			}
+		}
+		if(!k)
+		{
+				tbuff[count].p1.x=lbuff[j].p1.x;
+				tbuff[count].p1.y=lbuff[j].p1.y;
+				
+				tbuff[count].p2.x=lbuff[j].p2.x;
+				tbuff[count].p2.y=lbuff[j].p2.y;
+				
+				count++;
+		}				
+		
+	}
+	
+	for(i=0;i<count;i++)
+	{
+				lbuff[i].p1.x=tbuff[i].p1.x;
+				lbuff[i].p1.y=tbuff[i].p1.y;
+				
+				lbuff[i].p2.x=tbuff[i].p2.x;
+				lbuff[i].p2.y=tbuff[i].p2.y;		
+	}
+	
+	*nbuff=count;
+	free(tbuff);
+	return 1;
+}
+
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr)
 {
@@ -29,7 +81,7 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned 
 	game->player[1].score=0;	
 	
 	game->sqr=sqr;
-	game->ai=dbf_aiv1;
+	game->ai=dbf_aiv2;
 	
 	for(y=0;y<game->sqr+1;y++)
 	{
@@ -258,6 +310,34 @@ unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsig
 	return count;
 }
 
+/*
+unsigned int dbf_getblankline(struct dbs_game *game)
+{
+unsigned int x,y,count;	
+
+count=0;
+	for(y=0;y<game->sqr+1;y++)
+	{
+		for(x=0;x<game->sqr;x++)
+		{
+				if(game->point[y*(game->sqr+1)+x].next_x==UNSTAMP && game->point[y*(game->sqr+1)+x+1].prev_x==UNSTAMP)	
+				count++;
+		}
+	}
+	
+	for(x=0;x<game->sqr+1;x++)
+	{
+		for(y=0;y<game->sqr;y++)
+		{
+				if(game->point[y*(game->sqr+1)+x].next_y==UNSTAMP && game->point[(y+1)*(game->sqr+1)+x].prev_y==UNSTAMP)
+				count++;
+		}
+	}
+	
+	return count;
+}
+*/
+
 unsigned int dbf_countbit(unsigned int num)
 {
 	unsigned int i,j;
@@ -337,6 +417,65 @@ int dbf_aiv1(struct dbs_game *game,struct dbs_line *line)
 	}
 	}
 		
+	free(lbuff);
+	return ai_invalid;
+}
+
+int dbf_aiv2(struct dbs_game *game,struct dbs_line *line)
+{
+	struct dbs_line *lbuff,*tmp;
+	unsigned int i,j,k;
+	
+	lbuff=(struct dbs_line *)malloc(sizeof(struct dbs_line)* (game->sqr)*(game->sqr) *4);
+	tmp=(struct dbs_line *)malloc(sizeof(struct dbs_line)* (game->sqr)*(game->sqr) *4);
+	
+	if(!lbuff || !tmp) 
+	{
+		if(lbuff) free(lbuff);
+		if(tmp) free(tmp);
+		return ai_errmalloc;
+	}
+	
+	k=dbf_getremainline(game,tmp,2);
+	
+	for(j=1;j<=4;j+=2)
+	{
+	if((i=dbf_getremainline(game,lbuff,j)))
+	{
+		if(j==3)
+		{
+			
+			if(!rmremainline2(lbuff,tmp,&i,k) || !i) i=dbf_getremainline(game,lbuff,j);
+
+		}
+
+		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
+		free(tmp);
+		free(lbuff);
+		return (j==1)?ai_best:ai_random;
+
+	}
+	}
+	
+	for(j=4;j>=2;j-=2)
+	{
+	if((i=dbf_getremainline(game,lbuff,j)))
+	{
+		if(j==4)
+		{
+				if(!rmremainline2(lbuff,tmp,&i,k) || !i) i=dbf_getremainline(game,lbuff,j);
+
+		}
+
+		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
+		free(tmp);
+		free(lbuff);
+		return (j==1)?ai_best:ai_random;
+
+	}
+	}
+	
+	free(tmp);
 	free(lbuff);
 	return ai_invalid;
 }

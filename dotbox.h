@@ -59,6 +59,8 @@ unsigned int dbf_countsqr(struct dbs_game *game);
 
 unsigned int dbf_getremainline(struct dbs_game *game,struct dbs_line *line,unsigned int rcount);
 
+/*unsigned int dbf_getblankline(struct dbs_game *game);*/
+
 unsigned int dbf_countbit(unsigned int num);
 int dbf_postzerobit(unsigned int num);
 
@@ -68,6 +70,7 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
 int dbf_aiv1(struct dbs_game *game,struct dbs_line *line);
+int dbf_aiv2(struct dbs_game *game,struct dbs_line *line);
 
 int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player);
 

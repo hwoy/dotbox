@@ -39,7 +39,7 @@ int main(void)
 	static char buff[BSIZE+1];
 	
 NEW_GAME:	
-	dbf_init(&game,"YOU",D_SQR);
+	dbf_init(&game,"YOU",D_SQR+1);
 	pindex=dbf_random(0,1);
 
 	putchar('\n');

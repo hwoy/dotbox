@@ -462,7 +462,7 @@ int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *
 {
 	int result;
 	unsigned int count;
-	
+		
 	count=dbf_countsqr(game);
 	if((result=dbf_setlinepoint(game,line))<0) return result;
 	

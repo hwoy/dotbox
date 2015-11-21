@@ -21,13 +21,18 @@
 #define K_TABLE 't'
 #define K_HELP 'h'
 
+
+#define PRINTTAB() printf("\t\t\t\t")
+
+#define NGPID 7
+
 static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line);
 static const char *gameidstr(const char *str[],int id);
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(void);
 static void showscore(struct dbs_game *game);
 
-static const char *idstr[]={"Invalide line","Invalid line-x","Invalid line-y",\
+static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
 "AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
@@ -58,11 +63,10 @@ do
 	/************************** COM **************************/	
 	
 	case COM:
-	
 		n=game.ai(&game,&line);
 		
 		putchar('\n');
-		printf("\t\t\t");printf("AI_ID = %d*(%s)\n",n,gameidstr(idstr,n));
+		PRINTTAB();printf("AI_ID = %d*(%s)\n",n,gameidstr(idstr,n));
 		
 	break;
 	
@@ -70,17 +74,16 @@ do
 	
 	/************************** HUMAN **************************/
 	case YOU:
-	
 		do
 		{
 		putchar('\n');		
 		printf("Enter a line --> ");dio_getch(buff,BSIZE,0);
 		
 		
-		/********************* Key*********************/
 		
 		if(sLen(buff)==1)
 		{
+			/********************* Key*********************/
 			switch(buff[0])
 			{
 				case K_NEW:
@@ -88,7 +91,7 @@ do
 				goto NEW_GAME;
 				
 				case K_QUIT:
-				if(answer("(y/n)--> ",buff,BSIZE,YES)==YES) goto QUIT_GAME;
+				if(answer("(Y/n)--> ",buff,BSIZE,YES)==YES) goto QUIT_GAME;
 				else  break;
 				
 				case K_HELP:
@@ -105,20 +108,30 @@ do
 				putchar('\n');
 				break;
 			}
+			
+			/********************* Key*********************/
 		}
 			
-		/********************* Key*********************/
 		
 		}while(cropui(&game,buff,&line)<0);
 		
 	break;
-	/************************** HUMAN **************************/
 	}
+	/************************** HUMAN **************************/
+	
+	
+	
+	
+	
 	
 		j=dbf_gameplay(&game,&line,&game.player[pindex]);
 		
-		
-		/************** Fatal Error **************/
+	
+
+
+
+	
+		/************** Fatal Error(GP)(Require quit game) **************/
 		switch(j)
 		{
 			case ai_errmalloc:
@@ -126,21 +139,24 @@ do
 			printf("Error:%s\n",gameidstr(idstr,j));
 			goto QUIT_GAME;
 		}
-		/************** Fatal Error **************/
+		/************** Fatal Error(GP)(Require quit game) **************/
 		
 		
-		/************** Tiny Error **************/
+		/************** Tiny Error(GP) **************/
 		if(j<=gp_invy) 
 		{
 			printf("Error:%s\n",gameidstr(idstr,j));
 			continue;
 		}
-		/************** Tiny Error **************/
+		/************** Tiny Error(GP) **************/
 		
-		if(pindex==COM) printf("\t\t\t");
+		
+		
+		
+		if(pindex==COM) PRINTTAB();
 		printf("%s: (%u,%u) (%u,%u)\n",game.player[pindex].name,line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
-		if(pindex==COM) printf("\t\t\t");
+		if(pindex==COM) PRINTTAB();
 		printf("GP_ID = %d*(%s)\n",j,gameidstr(idstr,j));
 		
 		
@@ -164,6 +180,14 @@ QUIT_GAME:
 	return 0;
 }
 
+
+
+
+
+
+
+
+
 static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line)
 {
 	unsigned int x,y;
@@ -171,17 +195,23 @@ static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line)
 	{
 		if(!isUint(&str[1])) return -1;
 		x=s2ui(&str[1]);
+		
+		if(x>=game->sqr*(game->sqr+1)) return -2;
+			
 		dbf_getpointlinex(game,x,line);
 	}
 	else if(str[0]==PREFIX_Y)
 	{
 		if(!isUint(&str[1])) return -1;
 		y=s2ui(&str[1]);
+		
+		if(y>=game->sqr*(game->sqr+1)) return -3;
+		
 		dbf_getpointliney(game,y,line);
 	}
 	else
 	{
-		return -2;
+		return -4;
 	}
 	
 	return 1;
@@ -189,7 +219,7 @@ static int cropui(struct dbs_game *game,const char *str,struct dbs_line *line)
 
 static const char *gameidstr(const char *str[],int id)
 {
-	return str[id+7];
+	return str[id+NGPID];
 }
 
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey)

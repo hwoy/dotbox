@@ -54,10 +54,7 @@ void printTable(struct dbs_game *game,unsigned int len)
 
 char dio_getch(char *buff,int size,char dkey)
 {
-		
-	fgets(buff,size,stdin);
-	replacech(buff,13,0);
-	replacech(buff,10,0);
+	dio_getstr(buff,size);
 	if(!strlen(buff))
 	{
 		return dkey;

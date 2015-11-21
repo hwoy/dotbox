@@ -93,17 +93,17 @@ do
 	  switch(i)
 	  {
 		  case k_x:
-		if(!isUint(carray_buff)) continue;
+		if(!isUint(carray_buff)) 		{i=-1;continue;}
 		x=s2ui(carray_buff);
-		if(x>=game.sqr*(game.sqr+1)) continue;	
+		if(x>=game.sqr*(game.sqr+1)) 	{i=-2;continue;}	
 		dbf_getpointlinex(&game,x,&line);
 		break;
 		
 		
 		  case k_y:
-		if(!isUint(carray_buff)) continue;
+		if(!isUint(carray_buff)) 		{i=-3;continue;}
 		y=s2ui(carray_buff);
-		if(y>=game.sqr*(game.sqr+1)) continue;
+		if(y>=game.sqr*(game.sqr+1)) 	{i=-4;continue;}
 		dbf_getpointliney(&game,y,&line);		  
 		  break;
 		  

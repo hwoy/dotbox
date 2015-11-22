@@ -194,16 +194,16 @@ void dbf_srandom (int seed)
 }
 
 
-int dbf_rand(void)
+unsigned int dbf_rand(void)
 {
 #ifdef _DEVRAND_
         FILE           *fp;
-        int             i,j,k;
+        unsigned int             i,j,k;
         fp = fopen(DEVRAND, "rb");
         if (!fp)
                 return 0;
 		for(k=0,j=0;j<sizeof(i);j+=sizeof(char),k++)
-        *(((char *)&i)+k) = fgetc(fp);
+        *(char *)(((char *)&i)+k) = fgetc(fp);
 	
         fclose(fp);
         return i;
@@ -212,7 +212,7 @@ int dbf_rand(void)
 #endif
 }
 
-int dbf_random (int min, int max)
+unsigned int dbf_random (unsigned int min, unsigned int max)
 {
   return min <= max ? min + (dbf_rand () % (max - min + 1)) : -1;
 }

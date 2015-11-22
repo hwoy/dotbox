@@ -54,8 +54,8 @@ int dbf_setlinex(struct dbs_game *game,unsigned int linenum);
 int dbf_setliney(struct dbs_game *game,unsigned int linenum);
 
 void dbf_srandom (int seed);
-int dbf_rand(void);
-int dbf_random (int min, int max);
+unsigned int dbf_rand(void);
+unsigned int dbf_random (unsigned int min, unsigned int max);
 
 unsigned int dbf_countsqr(struct dbs_game *game);
 

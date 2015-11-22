@@ -13,7 +13,7 @@ $(bin2):	fvj.o  dotbox.o dotbox_io.o function.o opt.o
 	$(CC) -o $(bin2) fvj.o  dotbox.o dotbox_io.o function.o opt.o
 	
 clean:
-	rm -rf *.o *.exe $(bin) $(bin2)
+	rm -rf *.o *.exe $(bin1) $(bin2)
 
 
 dotbox.o: dotbox.c dotbox.h

@@ -203,7 +203,7 @@ unsigned int dbf_rand(void)
         if (!fp)
                 return 0;
 		for(k=0,j=0;j<sizeof(i);j+=sizeof(char),k++)
-        *(char *)(((char *)&i)+k) = fgetc(fp);
+        ((char *)&i)[k] = fgetc(fp);
 	
         fclose(fp);
         return i;

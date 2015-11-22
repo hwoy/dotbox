@@ -112,7 +112,7 @@ do
 		
 		if(n==ai_nomove)
 		{
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"Error:%s\n",gameidstr(idstr,n));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"AI Error:%s\n",gameidstr(idstr,n));
 			goto QUIT_GAME;	
 		}
 		
@@ -125,7 +125,7 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"Error:%s\n",gameidstr(idstr,gpid));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",gameidstr(idstr,gpid));
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -134,7 +134,7 @@ do
 		/************** Tiny Error(GP) **************/
 		if(gpid<=gp_invy) 
 		{
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"Error:%s\n",gameidstr(idstr,gpid));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",gameidstr(idstr,gpid));
 			continue;
 		}
 		/************** Tiny Error(GP) **************/

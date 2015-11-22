@@ -1,3 +1,7 @@
+#ifdef _DEVRAND_
+#include <stdio.h>
+#endif
+
 #include <stdlib.h>
 #include <time.h>
 #include "dotbox.h"
@@ -198,7 +202,7 @@ int dbf_rand(void)
         fp = fopen(DEVRAND, "rb");
         if (!fp)
                 return 0;
-		for(k=0,j=sizeof(char);j<sizeof(i);j+=sizeof(char),k++)
+		for(k=0,j=0;j<sizeof(i);j+=sizeof(char),k++)
         ((char *)&i)[k] = fgetc(fp);
 	
         fclose(fp);

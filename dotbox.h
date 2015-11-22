@@ -87,7 +87,3 @@ gp_invline=-7,gp_invx=-6,gp_invy=-5,ai_nomove=-4,ai_errmalloc=-3,gp_gameover=-2,
 #ifdef _DEVRAND_
 static const char DEVRAND[]="/dev/urandom";
 #endif
-
-#ifdef _COMNAME_
-static const char *COMNAME[]={"John_C","Sarah_C","Victor_C",NULL} ;
-#endif

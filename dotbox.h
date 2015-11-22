@@ -36,7 +36,7 @@ struct dbs_game
 
 typedef int (*dbv_ai)(struct dbs_game *game,struct dbs_line *line);
 
-struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr,dbv_ai ai);
+struct dbs_game *dbf_init(struct dbs_game *game,const char *p1name,const char *p2name,unsigned int sqr,dbv_ai ai);
 void dbf_destroy(struct dbs_game *game);
 
 
@@ -71,8 +71,8 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
-int dbf_aiv1(struct dbs_game *game,struct dbs_line *line);
-int dbf_aiv2(struct dbs_game *game,struct dbs_line *line);
+int dbf_aiv1_Friday(struct dbs_game *game,struct dbs_line *line);
+int dbf_aiv2_Jarvis(struct dbs_game *game,struct dbs_line *line);
 
 int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player);
 

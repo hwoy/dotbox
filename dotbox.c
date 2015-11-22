@@ -48,25 +48,21 @@ static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned in
 }
 
 
-struct dbs_game *dbf_init(struct dbs_game *game,const char *playername,unsigned int sqr,dbv_ai ai)
+struct dbs_game *dbf_init(struct dbs_game *game,const char *p1name,const char *p2name,unsigned int sqr,dbv_ai ai)
 {
 	unsigned int x,y;
 	
 	game->point=(struct dbs_point *)malloc(sizeof(struct dbs_point)*(sqr+1)*(sqr+1));
 	if(!game->point) return NULL;
 	
-	#ifndef _DEVRAND_
-	dbf_srandom(time(NULL));
-	#endif
-	
-	game->player[0].name=playername;
+	game->player[0].name=p1name;
 	game->player[0].score=0;
 	
 	#ifdef _COMNAME_
 		for(x=0;COMNAME[x];x++);
-		game->player[1].name=x?COMNAME[dbf_random(0,x-1)]:CNAME;
+		game->player[1].name=x?COMNAME[dbf_random(0,x-1)]:p2name;
 	#else
-		game->player[1].name=CNAME;
+		game->player[1].name=p2name;
 	#endif
 	
 	game->player[1].score=0;	
@@ -353,7 +349,7 @@ struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
 	return dsk;
 }
 
-int dbf_aiv1(struct dbs_game *game,struct dbs_line *line)
+int dbf_aiv1_Friday(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff;
 	unsigned int i,j;
@@ -385,7 +381,7 @@ int dbf_aiv1(struct dbs_game *game,struct dbs_line *line)
 	return ai_nomove;
 }
 
-int dbf_aiv2(struct dbs_game *game,struct dbs_line *line)
+int dbf_aiv2_Jarvis(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff,*tmp;
 	unsigned int i,j,k;

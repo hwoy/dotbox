@@ -4,7 +4,7 @@
 #include "dotbox_io.h"
 #include "function.h"
 
-#define D_SQR 3
+#define D_SQR 4
 #define LEN 4
 #define BSIZE 512
 
@@ -29,7 +29,7 @@
 
 static const char *gameidstr(const char *str[],int id);
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
-static void helpkey(void);
+static void helpkey(const char *key[],const char *keystr[]);
 static void showscore(struct dbs_game *game);
 static int key_option(const char *str,const char *key[],char *buff);
 
@@ -37,24 +37,46 @@ static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid l
 "AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
-static const char *key[]={"x","y","-","+","t","h",NULL};
+static const char *key[]={"x","y","s","-","+","t","h",NULL};
+static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Quit game","New Game","Show game table","Show keys help",NULL};
 enum
 {
-	k_x,k_y,k_quit,k_new,k_tab,k_help
+	k_x,k_y,k_s,k_quit,k_new,k_tab,k_help
 };
+
+static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
+static const char *gainame[]={"Friday","Jarvis"};
 
 int main(int argc, const char *argv[])
 {
 	int i,n,gpid;
+	unsigned int j;
 	unsigned int pindex;
 	unsigned int ui_cindex;
 	unsigned int x,y;
+	static char buff[BSIZE+1],carray_buff[BSIZE];
 	struct dbs_game game;
 	struct dbs_line line;
-	static char buff[BSIZE+1],carray_buff[BSIZE];
 	
-NEW_GAME:	
-	dbf_init(&game,"YOU",D_SQR+1,dbf_aiv2);
+	unsigned int squar;
+	const char *p1name,*p2name;
+	dbv_ai ai;
+	
+	squar=D_SQR;
+	p1name="YOU";
+	
+	
+	#ifndef _DEVRAND_
+	dbf_srandom(time(NULL));
+	#endif	
+NEW_GAME:
+
+	
+	j=dbf_random(0,1);
+	ai=gai[j];
+	p2name=gainame[j];
+	
+	dbf_init(&game,p1name,p2name,squar,ai);
 	pindex=dbf_random(0,1);
 
 	putchar('\n');
@@ -74,7 +96,8 @@ do
 		n=game.ai(&game,&line);
 		
 		putchar('\n');
-		PRINTTAB();printf("AI_ID = %d*(%s)\n",n,gameidstr(idstr,n));
+		PRINTTAB();printf("NAME = %s\n",game.player[pindex].name);
+		PRINTTAB();printf("AI_RID = %d*(%s)\n",n,gameidstr(idstr,n));
 		
 	break;
 	
@@ -88,24 +111,28 @@ do
 		printf("Enter a line --> ");
 		
 		dio_getstr(buff,BSIZE);
-		
 		i=key_option(buff,key,carray_buff);
 	  switch(i)
 	  {
 		  case k_x:
-		if(!isUint(carray_buff)) 		{i=-1;continue;}
+		if(!isUint(carray_buff)) 		{i*=-1;continue;}
 		x=s2ui(carray_buff);
-		if(x>=game.sqr*(game.sqr+1)) 	{i=-2;continue;}	
+		if(x>=game.sqr*(game.sqr+1)) 	{i*=-1;continue;}	
 		dbf_getpointlinex(&game,x,&line);
 		break;
 		
 		
 		  case k_y:
-		if(!isUint(carray_buff)) 		{i=-3;continue;}
+		if(!isUint(carray_buff)) 		{i*=-1;continue;}
 		y=s2ui(carray_buff);
-		if(y>=game.sqr*(game.sqr+1)) 	{i=-4;continue;}
+		if(y>=game.sqr*(game.sqr+1)) 	{i*=-1;continue;}
 		dbf_getpointliney(&game,y,&line);		  
 		  break;
+		  
+		  case k_s:
+		if(!isUint(carray_buff)) 		{i*=-1;continue;}
+		squar=s2ui(carray_buff);
+		if(squar==0)					{i*=-1;continue;}
 		  
 		  case k_new:
 		dbf_destroy(&game);
@@ -119,7 +146,11 @@ do
 		putchar('\n');
 		printTable(&game,LEN);
 		putchar('\n');
-		break;			
+		break;
+
+		  case k_help:
+		  helpkey(key,keystr);
+		  break;		
 		 
 		  case k_quit:
 		if(answer("Do you want to quit this game?\n(Y/n)",buff,BSIZE,YES)==YES)
@@ -132,7 +163,8 @@ do
 			
 		
 		}while( i!=k_x && i!=k_y );
-		
+	putchar('\n');
+	printf("NAME = %s\n",game.player[pindex].name);	
 	break;
 	}
 	/************************** HUMAN **************************/
@@ -172,10 +204,10 @@ do
 		
 		
 		if(pindex==COM) PRINTTAB();
-		printf("%s: (%u,%u) (%u,%u)\n",game.player[pindex].name,line.p1.x,line.p1.y,line.p2.x,line.p2.y);
+		printf("MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
 		if(pindex==COM) PRINTTAB();
-		printf("GP_ID = %d*(%s)\n",gpid,gameidstr(idstr,gpid));
+		printf("GP_RID = %d*(%s)\n",gpid,gameidstr(idstr,gpid));
 		
 		
 	}while( gpid<gp_gameover);
@@ -231,14 +263,29 @@ static char answer(const char *str,char *buff,unsigned int bsize,char dkey)
 	return buff[0];
 }
 
-static void helpkey(void)
+static void helpkey(const char *key[],const char *keystr[])
 {
-	putchar('\n');
-	printf("\t%c:\t NEW GAME\n",K_NEW);
-	printf("\t%c:\t QUIT GAME\n",K_QUIT);
-	printf("\t%c:\t SHOW HELP\n",K_HELP);
-	printf("\t%c:\t SHOW TABLE\n",K_TABLE);
-	putchar('\n');
+	unsigned int i;
+	fputc('\n',stderr);
+
+	fprintf(stderr,"%s\n","[KEYS]");
+	fputc('\n',stderr);
+	
+	for(i=0;key[i];i++)
+		fprintf(stderr,"%5s\t%s\n",key[i],keystr[i]);
+
+	fputc('\n',stderr);
+	
+	fprintf(stderr,"%s\n","[EXAMPLE]");
+	fputc('\n',stderr);
+	
+	fprintf(stderr,"%5s%u\tEnter x line %u\n",key[0],i,i=dbf_random(0,D_SQR*(D_SQR+1)-1));
+	fprintf(stderr,"%5s%u\tEnter y line %u\n",key[1],i,i=dbf_random(0,D_SQR*(D_SQR+1)-1));
+	fprintf(stderr,"%5s%u\tEnter a squar value %u\n",key[2],i,i=dbf_random(2,10));
+	fprintf(stderr,"%5s\tQuit Game\n",key[3]);
+	fprintf(stderr,"%5s\tNew Game\n",key[4]);
+	
+	fputc('\n',stderr);
 }
 
 static void showscore(struct dbs_game *game)

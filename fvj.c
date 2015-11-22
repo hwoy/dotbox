@@ -22,7 +22,7 @@ static int showErr (const char **str, int errno, const char *msg);
 static unsigned int basename (const char *ch);
 
 static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
-"AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
+"AI no more move","Memmory can't be allocated","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
 static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
@@ -104,9 +104,6 @@ do
 {
 	do{
 		
-
-		
-
 		n=gai[pindex](&game,&line);
 
 		putchar('\n');
@@ -115,7 +112,7 @@ do
 		
 		if(n==ai_nomove)
 		{
-			printf("Error:%s\n",gameidstr(idstr,n));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"Error:%s\n",gameidstr(idstr,n));
 			goto QUIT_GAME;	
 		}
 		
@@ -123,15 +120,12 @@ do
 		
 	
 
-
-
-	
 		/************** Fatal Error(GP)(Require quit game) **************/
 		switch(gpid)
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			printf("Error:%s\n",gameidstr(idstr,gpid));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"Error:%s\n",gameidstr(idstr,gpid));
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -140,7 +134,7 @@ do
 		/************** Tiny Error(GP) **************/
 		if(gpid<=gp_invy) 
 		{
-			printf("Error:%s\n",gameidstr(idstr,gpid));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"Error:%s\n",gameidstr(idstr,gpid));
 			continue;
 		}
 		/************** Tiny Error(GP) **************/

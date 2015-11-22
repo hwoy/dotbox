@@ -30,7 +30,7 @@ static void showscore(struct dbs_game *game);
 static int key_option(const char *str,const char *key[],char *buff);
 
 static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
-"AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
+"AI no more move","Memmory can't be allocated","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
 static const char *key[]={"x","y","s","1","2","-","+","t","h",NULL};

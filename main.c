@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "dotbox.h"
 #include "dotbox_io.h"
 #include "function.h"
@@ -16,11 +17,6 @@
 
 #define YES 'y'
 #define NO 'n'
-
-#define K_QUIT '-'
-#define K_NEW '+'
-#define K_TABLE 't'
-#define K_HELP 'h'
 
 
 #define PRINTTAB() printf("\t\t\t\t")

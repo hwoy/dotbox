@@ -1,16 +1,16 @@
 CC=gcc
-bin=dotbox
+bin1=dotbox
 bin2=fvj
 CFLAGS=-O2 -std=c89 -pedantic #-Wall -Werror # -D_DEVRAND_ # for better random numbers
 .PHONY: all clean
 
-all: $(bin) $(bin2)
+all: $(bin1) $(bin2)
 
-$(bin):	main.o  dotbox.o dotbox_io.o function.o opt.o
-	$(CC) -o $(bin) main.o  dotbox.o dotbox_io.o function.o opt.o
+$(bin1):	main.o  dotbox.o dotbox_io.o function.o opt.o
+	$(CC) -o $(bin1) main.o  dotbox.o dotbox_io.o function.o opt.o
 	
-$(bin2):	fvj.o  dotbox.o dotbox_io.o
-	$(CC) -o $(bin2) fvj.o  dotbox.o dotbox_io.o
+$(bin2):	fvj.o  dotbox.o dotbox_io.o function.o opt.o
+	$(CC) -o $(bin2) fvj.o  dotbox.o dotbox_io.o function.o opt.o
 	
 clean:
 	rm -rf *.o *.exe $(bin) $(bin2)

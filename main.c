@@ -37,15 +37,18 @@ static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid l
 "AI no more move","Error malloc","Game over","Normal","AI best move","AI worse move","AI random move",\
 NULL};
 
-static const char *key[]={"x","y","s","-","+","t","h",NULL};
-static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Quit game","New Game","Show game table","Show keys help",NULL};
+static const char *key[]={"x","y","s","1","2","-","+","t","h",NULL};
+static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value",\
+"AI version 1","AI version 2","Quit game","New Game","Show game table","Show keys help",NULL};
 enum
 {
-	k_x,k_y,k_s,k_quit,k_new,k_tab,k_help
+	k_x,k_y,k_s,k_1,k_2,k_quit,k_new,k_tab,k_help
 };
 
 static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
 static const char *gainame[]={"Friday","Jarvis"};
+
+static const char d_p1name[]="YOU";
 
 int main(int argc, const char *argv[])
 {
@@ -63,12 +66,13 @@ int main(int argc, const char *argv[])
 	dbv_ai ai;
 	
 	squar=D_SQR;
-	p1name="YOU";
+	p1name=d_p1name;
 	
 	
 	#ifndef _DEVRAND_
 	dbf_srandom(time(NULL));
-	#endif	
+	#endif
+	
 NEW_GAME:
 
 	
@@ -108,7 +112,7 @@ do
 		do
 		{
 		putchar('\n');		
-		printf("Enter a line --> ");
+		printf("Enter a line (%s=help) --> ",key[8]);
 		
 		dio_getstr(buff,BSIZE);
 		i=key_option(buff,key,carray_buff);
@@ -128,6 +132,14 @@ do
 		if(y>=game.sqr*(game.sqr+1)) 	{i*=-1;continue;}
 		dbf_getpointliney(&game,y,&line);		  
 		  break;
+		  
+		  case k_1:
+		  case k_2:
+		  ai=gai[i-k_1];
+		  game.ai=ai;
+		  p2name=gainame[i-k_1];
+		  game.player[COM].name=p2name;
+		  printf("AI codename: %s activated!",p2name);
 		  
 		  case k_s:
 		if(!isUint(carray_buff)) 		{i*=-1;continue;}
@@ -282,8 +294,8 @@ static void helpkey(const char *key[],const char *keystr[])
 	fprintf(stderr,"%5s%u\tEnter x line %u\n",key[0],i,i=dbf_random(0,D_SQR*(D_SQR+1)-1));
 	fprintf(stderr,"%5s%u\tEnter y line %u\n",key[1],i,i=dbf_random(0,D_SQR*(D_SQR+1)-1));
 	fprintf(stderr,"%5s%u\tEnter a squar value %u\n",key[2],i,i=dbf_random(2,10));
-	fprintf(stderr,"%5s\tQuit Game\n",key[3]);
-	fprintf(stderr,"%5s\tNew Game\n",key[4]);
+	fprintf(stderr,"%5s\tQuit Game\n",key[5]);
+	fprintf(stderr,"%5s\tNew Game\n",key[6]);
 	
 	fputc('\n',stderr);
 }

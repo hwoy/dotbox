@@ -5,10 +5,6 @@
 static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned int *nbuff,unsigned int ntmp);
 
 
-
-static const char CNAME[]="COMPUTER";
-
-
 static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned int *nbuff,unsigned int ntmp)
 {
 	unsigned int i,j,k,count;
@@ -58,13 +54,8 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *p1name,const char *p
 	game->player[0].name=p1name;
 	game->player[0].score=0;
 	
-	#ifdef _COMNAME_
-		for(x=0;COMNAME[x];x++);
-		game->player[1].name=x?COMNAME[dbf_random(0,x-1)]:p2name;
-	#else
-		game->player[1].name=p2name;
-	#endif
-	
+
+	game->player[1].name=p2name;
 	game->player[1].score=0;	
 	
 	game->sqr=sqr;

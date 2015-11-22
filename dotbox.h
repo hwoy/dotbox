@@ -27,7 +27,6 @@ struct dbs_player
 
 struct dbs_game
 {
-	const char *playername;
 	unsigned int sqr;
 	struct dbs_point *point;
 	struct dbs_player player[2];

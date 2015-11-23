@@ -5,12 +5,10 @@
 #include "dotbox_io.h"
 #include "function.h"
 
-#define D_SQR 4
-#define LEN 4
-#define BSIZE 512
 
-#define P1 0
-#define P2 1
+#include "common.h"
+
+
 #define YOU P1
 #define COM P2
 
@@ -21,17 +19,12 @@
 #define NO 'n'
 
 
-#define PRINTTAB() printf("\t\t\t\t")
 
 
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(const char *key[],const char *keystr[]);
-static void showscore(struct dbs_game *game);
 static int key_option(const char *str,const char *key[],char *buff);
 
-static const char *idstr[]={"AI best move","AI worse move","AI random move","Hit score","Double tab","Game over","Normal",\
-"Invalide line","Invalid line-x","Invalid line-y","AI no more move","Memmory can't be allocated",\
-NULL};
 
 static const char *key[]={"x","y","s","1","2","-","+","t","h",NULL};
 static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value",\
@@ -40,9 +33,6 @@ enum
 {
 	k_x,k_y,k_s,k_1,k_2,k_quit,k_new,k_tab,k_help
 };
-
-static dbv_ai gai[]={dbf_aiv1_Jarvis,dbf_aiv2_Friday};
-static const char *gainame[]={"Jarvis","Friday"};
 
 static const char d_p1name[]="YOU";
 
@@ -290,13 +280,6 @@ static void helpkey(const char *key[],const char *keystr[])
 	fputc('\n',stderr);
 }
 
-static void showscore(struct dbs_game *game)
-{
-	printf("%s:Score= %u",game->player[YOU].name,game->player[YOU].score);
-	printf(" <--VS--> ");
-	printf("%u =Score:%s\n",game->player[COM].score,game->player[COM].name);
-
-}
 
 static int key_option(const char *str,const char *key[],char *buff)
 {

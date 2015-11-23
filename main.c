@@ -38,7 +38,8 @@ static const char d_p1name[]="YOU";
 
 int main(int argc, const char *argv[])
 {
-	int i,aiid,gpid;
+	int i;
+	unsigned int aiid,gpid;
 	unsigned int j;
 	unsigned int pindex;
 	unsigned int ui_cindex;
@@ -214,7 +215,7 @@ do
 	printTable(&game,LEN);
 	putchar('\n');
 	
-	if(gpid!=gp_hitscore)
+	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
 	pindex=!pindex;
 
 }while(gpid!=gp_gameover);

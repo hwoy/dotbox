@@ -30,7 +30,8 @@ enum
 
 int main(int argc, const char *argv[])
 {
-	int i,aiid,gpid;
+	int i;
+	unsigned int aiid,gpid;
 	unsigned int pindex;
 	static char carray_buff[BSIZE];
 	unsigned int ui_cindex;
@@ -132,7 +133,7 @@ do
 	printTable(&game,LEN);
 	putchar('\n');
 	
-	if(gpid!=gp_hitscore)
+	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
 	pindex=!pindex;
 
 }while(gpid!=gp_gameover);

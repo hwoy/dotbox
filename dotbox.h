@@ -30,10 +30,10 @@ struct dbs_game
 	unsigned int sqr;
 	struct dbs_point *point;
 	struct dbs_player player[2];
-	int (*ai)(struct dbs_game *game,struct dbs_line *line);
+	unsigned int (*ai)(struct dbs_game *game,struct dbs_line *line);
 };
 
-typedef int (*dbv_ai)(struct dbs_game *game,struct dbs_line *line);
+typedef unsigned int (*dbv_ai)(struct dbs_game *game,struct dbs_line *line);
 
 struct dbs_game *dbf_init(struct dbs_game *game,const char *p1name,const char *p2name,unsigned int sqr,dbv_ai ai);
 void dbf_destroy(struct dbs_game *game);
@@ -70,12 +70,12 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
-int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
-int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line);
+unsigned int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
+unsigned int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line);
 
-int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player);
+unsigned int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player);
 
-int dbf_isgameover(struct dbs_game *game);
+unsigned int dbf_isgameover(struct dbs_game *game);
 
 
 

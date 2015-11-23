@@ -4,16 +4,16 @@
 
 [FUNCTION PROTOTYPE]
 
-int function_name(struct dbs_game *game,struct dbs_line *line);
+unsigned int function_name(struct dbs_game *game,struct dbs_line *line);
 
 =========================================================================
 
 [EXAMPLES]
 
-int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
+unsigned int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
 
 
-int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line);
+unsigned int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line);
 
 =========================================================================
 
@@ -29,7 +29,7 @@ process to a line value
 
 [FUNCTION RETURN]
 
-int = AI ID
+unsigned int = AI ID
 
 =========================================================================
 [AI ID]

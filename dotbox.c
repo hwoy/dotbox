@@ -344,7 +344,7 @@ struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
 	return dsk;
 }
 
-int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
+unsigned int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff;
 	unsigned int i,j;
@@ -352,7 +352,7 @@ int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
 	lbuff=(struct dbs_line *)malloc(sizeof(struct dbs_line)* (game->sqr)*(game->sqr) *4);
 	if(!lbuff) return ai_errmalloc;
 	
-	for(j=1;j<=4;j+=2)
+	for(j=1;j<=3;j+=2)
 	{
 	if((i=dbf_getremainline(game,lbuff,j)))
 	{
@@ -376,7 +376,7 @@ int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
 	return ai_nomove;
 }
 
-int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
+unsigned int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff,*tmp;
 	unsigned int i,j,k;
@@ -393,7 +393,7 @@ int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 	
 	k=dbf_getremainline(game,tmp,2);
 	
-	for(j=1;j<=4;j+=2)
+	for(j=1;j<=3;j+=2)
 	{
 	if((i=dbf_getremainline(game,lbuff,j)))
 	{
@@ -439,7 +439,7 @@ int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
 		free(tmp);
 		free(lbuff);
-		return (j==1)?ai_best:ai_random;
+		return (j==2)?ai_worse:ai_random;
 
 	}
 	}
@@ -449,7 +449,7 @@ int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 	return ai_nomove;
 }
 
-int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player)
+unsigned int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player)
 {
 	int result;
 	unsigned int count;
@@ -468,7 +468,7 @@ int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *
 	return dbf_isgameover(game);
 }
 
-int dbf_isgameover(struct dbs_game *game)
+unsigned int dbf_isgameover(struct dbs_game *game)
 {
 	unsigned int i;
 	struct dbs_line linex,liney;

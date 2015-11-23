@@ -362,7 +362,7 @@ unsigned int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
 	}
 	}
 	
-	for(j=4;j>=1;j-=2)
+	for(j=4;j>=2;j-=2)
 	{
 	if((i=dbf_getremainline(game,lbuff,j)))
 	{

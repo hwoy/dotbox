@@ -21,7 +21,7 @@ static void showHelp (const char *str, const char **param,const char **hparam);
 static int showErr (const char **str, int errno, const char *msg);
 static unsigned int basename (const char *ch);
 
-static const char *idstr[]={"Game over","Normal","AI best move","AI worse move","AI random move","Hit score",\
+static const char *idstr[]={"AI best move","AI worse move","AI random move","Hit score","Double tab","Game over","Normal",\
 "Invalide line","Invalid line-x","Invalid line-y","AI no more move","Memmory can't be allocated",\
 NULL};
 
@@ -112,36 +112,12 @@ do
 		
 		if(aiid==ai_nomove)
 		{
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"AI Error:%s\n",idstr[aiid]);
 			goto QUIT_GAME;	
 		}
 		
 		gpid=dbf_gameplay(&game,&line,&game.player[pindex]);
 		
-	
 
-		/************** Fatal Error(GP)(Require quit game) **************/
-		switch(gpid)
-		{
-			case ai_errmalloc:
-			case ai_nomove:
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",idstr[gpid]);
-			goto QUIT_GAME;
-		}
-		/************** Fatal Error(GP)(Require quit game) **************/
-		
-		
-		/************** Tiny Error(GP) **************/
-		if(gpid>=gp_invy) 
-		{
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",idstr[gpid]);
-			continue;
-		}
-		/************** Tiny Error(GP) **************/
-		
-		
-		
-		
 		if(pindex==P2) PRINTTAB();
 		printf("MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
@@ -149,7 +125,24 @@ do
 		printf("GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
 		
 		
-	}while( gpid<gp_gameover);
+		/************** Fatal Error(GP)(Require quit game) **************/
+		switch(gpid)
+		{
+			case ai_errmalloc:
+			case ai_nomove:
+			goto QUIT_GAME;
+		}
+		/************** Fatal Error(GP)(Require quit game) **************/
+		
+		
+		/************** Tiny Error(GP) **************/
+		if(gpid>=gp_invline) 
+		{
+			continue;
+		}
+		/************** Tiny Error(GP) **************/		
+		
+	}while(gpid>gp_gamenormal);
 	
 	putchar('\n');
 	showscore(&game);
@@ -162,7 +155,7 @@ do
 	if(gpid!=gp_hitscore)
 	pindex=!pindex;
 
-}while(gpid>gp_gameover);
+}while(gpid!=gp_gameover);
 
 
 QUIT_GAME:

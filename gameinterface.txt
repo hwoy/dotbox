@@ -1,0 +1,25 @@
+AI Interface
+
+function prototype
+
+int function_name(struct dbs_game *game,struct dbs_line *line);
+
+PARAMETERS:
+struct dbs_game *game = structure of game
+input game information
+
+struct dbs_line *line = strcture of line
+output to line
+
+return:
+int = AI ID
+
+AI ID
+
+
+Examples
+
+int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
+
+
+int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)

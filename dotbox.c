@@ -455,13 +455,14 @@ int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *
 	unsigned int count;
 		
 	count=dbf_countsqr(game);
-	if((result=dbf_setlinepoint(game,line))<0) return result;
+	if((result=dbf_setlinepoint(game,line))>=gp_invline) return result;
 	
 	
 	if(dbf_countsqr(game) > count)
 	{
+		result=(dbf_countsqr(game)-count>1)?gp_doubletab:gp_hitscore;
 		player->score += dbf_countsqr(game)-count;
-		return dbf_isgameover(game)==gp_gameover?gp_gameover:gp_hitscore;
+		return dbf_isgameover(game)==gp_gameover?gp_gameover:result;
 	}
 	
 	return dbf_isgameover(game);

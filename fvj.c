@@ -53,7 +53,7 @@ int main(int argc, const char *argv[])
 	int i,aiid,gpid;
 	unsigned int pindex;
 	static char carray_buff[BSIZE];
-  unsigned int ui_cindex;
+	unsigned int ui_cindex;
 	struct dbs_game game;
 	struct dbs_line line;
 	

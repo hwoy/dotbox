@@ -1,26 +1,37 @@
 1.AI GAME Interface
 
-[function prototype]
+=========================================================================
+
+[FUNCTION PROTOTYPE]
 
 int function_name(struct dbs_game *game,struct dbs_line *line);
 
-[Examples]
+=========================================================================
+
+[EXAMPLES]
 
 int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
 
 
 int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line);
 
+=========================================================================
+
 [PARAMETERS]
+
 struct dbs_game *game = structure of game
 input game information
 
 struct dbs_line *line = strcture of line
-output to line
+process to a line value
+
+=========================================================================
 
 [FUNCTION RETURN]
+
 int = AI ID
 
+=========================================================================
 [AI ID]
 
 enum
@@ -34,12 +45,29 @@ ai_best = 0 == best move at least take one score
 ai_worse = 1 == worse move at least lose one score
 ai_random = 2 == Move and score not be changed
 
-ai_nomove = 10 == ai can not process for a line, considered for ai bugs
+ai_nomove = 10 == AI can not process for a line, considered for ai bugs
 ai_errmalloc = 11 == memory can not be allocated by malloc function
 
-[DESCRIBE]
+=========================================================================
+
+[DESCRIBTION]
 
 AI must not modify game data
 only process for a line
 and return AI ID
 
+AI must can process on varous squar[NxN] bord
+N = 1 to 2^(32)-1 (unsigned int) except zero
+
+AI must return above AI ID
+
+=========================================================================
+
+[TESTING]
+
+1. AI can play in one player (Only one player(AI))
+2. AI must return ai_nomove while runtime
+3. If you use malloc alloc calloc function , You will check memory leak
+4. Test both 32 and 64 bits environments
+
+=========================================================================

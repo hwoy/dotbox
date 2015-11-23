@@ -70,8 +70,8 @@ int dbf_issetline(struct dbs_game *game,struct dbs_line *line);
 
 
 struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src);
-int dbf_aiv1_Friday(struct dbs_game *game,struct dbs_line *line);
-int dbf_aiv2_Jarvis(struct dbs_game *game,struct dbs_line *line);
+int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line);
+int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line);
 
 int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player);
 

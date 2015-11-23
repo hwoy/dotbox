@@ -41,8 +41,8 @@ enum
 	k_x,k_y,k_s,k_1,k_2,k_quit,k_new,k_tab,k_help
 };
 
-static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
-static const char *gainame[]={"Friday","Jarvis"};
+static dbv_ai gai[]={dbf_aiv1_Jarvis,dbf_aiv2_Friday};
+static const char *gainame[]={"Jarvis","Friday"};
 
 static const char d_p1name[]="YOU";
 

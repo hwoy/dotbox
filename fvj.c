@@ -25,8 +25,8 @@ static const char *idstr[]={"Game over","Normal","AI best move","AI worse move",
 "Invalide line","Invalid line-x","Invalid line-y","AI no more move","Memmory can't be allocated",\
 NULL};
 
-static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
-static const char *gainame[]={"Friday","Jarvis"};
+static dbv_ai gai[]={dbf_aiv1_Jarvis,dbf_aiv2_Friday};
+static const char *gainame[]={"Jarvis","Friday"};
 
 static const char *cptrarr_param[] =
   { "-s:", "-h", NULL };

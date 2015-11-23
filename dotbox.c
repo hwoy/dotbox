@@ -344,7 +344,7 @@ struct dbs_line *dbf_copyline(struct dbs_line *dsk,struct dbs_line *src)
 	return dsk;
 }
 
-int dbf_aiv1_Friday(struct dbs_game *game,struct dbs_line *line)
+int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff;
 	unsigned int i,j;
@@ -376,7 +376,7 @@ int dbf_aiv1_Friday(struct dbs_game *game,struct dbs_line *line)
 	return ai_nomove;
 }
 
-int dbf_aiv2_Jarvis(struct dbs_game *game,struct dbs_line *line)
+int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 {
 	struct dbs_line *lbuff,*tmp;
 	unsigned int i,j,k;

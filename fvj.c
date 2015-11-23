@@ -20,12 +20,12 @@ static const char *helpparam[] =
 };
 
 static const char *err_str[] =
-  { "Invalid option", "Not an unsigned integer","Squar equal zero", NULL
+  { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game", NULL
 };
 
 enum
 {
-  err_inv, err_ni, err_sz
+  err_inv, err_ni, err_sz, err_initgame
 };
 
 int main(int argc, const char *argv[])
@@ -75,7 +75,8 @@ int main(int argc, const char *argv[])
 	}
 	}
 	
-	dbf_init(&game,p1name,p2name,squar,NULL);
+	if(!dbf_init(&game,p1name,p2name,squar,NULL))
+		return showErr (err_str, err_initgame, "dbf_init");
 
 	putchar('\n');
 	printTable(&game,LEN);

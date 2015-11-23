@@ -8,11 +8,6 @@
 #include "common.h"
 
 
-static void showHelp (const char *str, const char **param,const char **hparam);
-static int showErr (const char **str, int errno, const char *msg);
-static unsigned int basename (const char *ch);
-
-
 static const char *cptrarr_param[] =
   { "-s:", "-h", NULL };
 static const char *helpparam[] =
@@ -149,43 +144,3 @@ QUIT_GAME:
 
 }
 
-
-
-
-static void showHelp (const char *str, const char **param, const char **hparam)
-{
-  unsigned int i;
-  fprintf (stderr, "\nUSAGE: %s [option list]\n\n", &str[basename (str)]);
-
-  fprintf (stderr, "[OPTIONS]\n");
-
-  for (i = 0; param[i] && hparam[i]; i++)
-    {
-      fprintf (stderr, "%s\t\t%s\n", param[i], hparam[i]);
-    }
-  fprintf (stderr, "\n");
-
-  fprintf (stderr, "[DEFAULT]\n");
-  fprintf (stderr, "%s%u\n", param[0], D_SQR);
-  fprintf (stderr, "\n");
-}
-
-static int showErr (const char **str, int errno, const char *msg)
-{
-  fprintf (stderr, "ERR %d: %s : %s\n", errno, msg, str[errno]);
-  return -1 * (errno + 1);
-}
-
-static unsigned int
-basename (const char *ch)
-{
-  unsigned int i, j;
-  for (i = 0, j = 0; ch[i]; i++)
-    {
-      if (ch[i] == '\\' || ch[i] == '/')
-	{
-	  j = i;
-	}
-    }
-  return (j == 0) ? 0 : j + 1;
-}

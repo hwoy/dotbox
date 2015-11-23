@@ -407,7 +407,7 @@ int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 				return ai_errmalloc;
 			}
 			
-			if(!i) i=dbf_getremainline(game,lbuff,j);
+			if(!i) break;
 
 		}
 
@@ -432,7 +432,7 @@ int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 				return ai_errmalloc;
 			}
 			
-			if(!i) i=dbf_getremainline(game,lbuff,j);
+			if(!i) break;
 
 		}
 

@@ -23,17 +23,14 @@
 
 #define PRINTTAB() printf("\t\t\t\t")
 
-#define NGPID 7
 
-static const char *gameidstr(const char *str[],int id);
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(const char *key[],const char *keystr[]);
 static void showscore(struct dbs_game *game);
 static int key_option(const char *str,const char *key[],char *buff);
 
-static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
-"AI no more move","Memmory can't be allocated","Game over","Normal","AI best move","AI worse move","AI random move",\
-"Hit score",\
+static const char *idstr[]={"Game over","Normal","AI best move","AI worse move","AI random move","Hit score",\
+"Invalide line","Invalid line-x","Invalid line-y","AI no more move","Memmory can't be allocated",\
 NULL};
 
 static const char *key[]={"x","y","s","1","2","-","+","t","h",NULL};
@@ -51,7 +48,7 @@ static const char d_p1name[]="YOU";
 
 int main(int argc, const char *argv[])
 {
-	int i,n,gpid;
+	int i,aiid,gpid;
 	unsigned int j;
 	unsigned int pindex;
 	unsigned int ui_cindex;
@@ -96,11 +93,17 @@ do
 	/************************** COM **************************/	
 	
 	case COM:
-		n=game.ai(&game,&line);
+		aiid=game.ai(&game,&line);
+		
+		if(aiid==ai_nomove)
+		{
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"AI Error:%s\n",idstr[aiid]);
+			goto QUIT_GAME;	
+		}
 		
 		putchar('\n');
 		PRINTTAB();printf("NAME = %s\n",game.player[pindex].name);
-		PRINTTAB();printf("AI_RID = %d*(%s)\n",n,gameidstr(idstr,n));
+		PRINTTAB();printf("AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
 		
 	break;
 	
@@ -197,16 +200,16 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			printf("Error:%s\n",gameidstr(idstr,gpid));
+			printf("Error:%s\n",idstr[gpid]);
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
 		
 		
 		/************** Tiny Error(GP) **************/
-		if(gpid<=gp_invy) 
+		if(gpid>=gp_invy) 
 		{
-			printf("Error:%s\n",gameidstr(idstr,gpid));
+			printf("Error:%s\n",idstr[gpid]);
 			continue;
 		}
 		/************** Tiny Error(GP) **************/
@@ -218,10 +221,10 @@ do
 		printf("MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
 		if(pindex==COM) PRINTTAB();
-		printf("GP_RID = %d*(%s)\n",gpid,gameidstr(idstr,gpid));
+		printf("GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
 		
 		
-	}while( gpid<gp_gameover);
+	}while( gpid>gp_gameover);
 	
 	putchar('\n');
 	showscore(&game);
@@ -253,10 +256,7 @@ QUIT_GAME:
 
 
 
-static const char *gameidstr(const char *str[],int id)
-{
-	return str[id+NGPID];
-}
+
 
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey)
 {

@@ -11,19 +11,18 @@
 
 #define P1 0
 #define P2 1
-#define NGPID 7
+
 
 #define PRINTTAB() printf("\t\t\t\t")
 
-static const char *gameidstr(const char *str[],int id);
+
 static void showscore(struct dbs_game *game);
 static void showHelp (const char *str, const char **param,const char **hparam);
 static int showErr (const char **str, int errno, const char *msg);
 static unsigned int basename (const char *ch);
 
-static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
-"AI no more move","Memmory can't be allocated","Game over","Normal","AI best move","AI worse move","AI random move",\
-"Hit score",\
+static const char *idstr[]={"Game over","Normal","AI best move","AI worse move","AI random move","Hit score",\
+"Invalide line","Invalid line-x","Invalid line-y","AI no more move","Memmory can't be allocated",\
 NULL};
 
 static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
@@ -51,7 +50,7 @@ enum
 
 int main(int argc, const char *argv[])
 {
-	int i,n,gpid;
+	int i,aiid,gpid;
 	unsigned int pindex;
 	static char carray_buff[BSIZE];
   unsigned int ui_cindex;
@@ -105,15 +104,15 @@ do
 {
 	do{
 		
-		n=gai[pindex](&game,&line);
+		aiid=gai[pindex](&game,&line);
 
 		putchar('\n');
 		if(pindex==P2)PRINTTAB();printf("NAME = %s\n",game.player[pindex].name);
-		if(pindex==P2)PRINTTAB();printf("AI_RID = %d*(%s)\n",n,gameidstr(idstr,n));
+		if(pindex==P2)PRINTTAB();printf("AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
 		
-		if(n==ai_nomove)
+		if(aiid==ai_nomove)
 		{
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"AI Error:%s\n",gameidstr(idstr,n));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"AI Error:%s\n",idstr[aiid]);
 			goto QUIT_GAME;	
 		}
 		
@@ -126,16 +125,16 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",gameidstr(idstr,gpid));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",idstr[gpid]);
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
 		
 		
 		/************** Tiny Error(GP) **************/
-		if(gpid<=gp_invy) 
+		if(gpid>=gp_invy) 
 		{
-			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",gameidstr(idstr,gpid));
+			if(pindex==P2)PRINTTAB();fprintf(stderr,"GP Error:%s\n",idstr[gpid]);
 			continue;
 		}
 		/************** Tiny Error(GP) **************/
@@ -147,7 +146,7 @@ do
 		printf("MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
 		if(pindex==P2) PRINTTAB();
-		printf("GP_RID = %d*(%s)\n",gpid,gameidstr(idstr,gpid));
+		printf("GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
 		
 		
 	}while( gpid<gp_gameover);
@@ -163,7 +162,7 @@ do
 	if(gpid!=gp_hitscore)
 	pindex=!pindex;
 
-}while(gpid!=gp_gameover);
+}while(gpid>gp_gameover);
 
 
 QUIT_GAME:
@@ -172,10 +171,7 @@ QUIT_GAME:
 
 }
 
-static const char *gameidstr(const char *str[],int id)
-{
-	return str[id+NGPID];
-}
+
 static void showscore(struct dbs_game *game)
 {
 	printf("%s:Score= %u",game->player[P1].name,game->player[P1].score);

@@ -26,9 +26,9 @@ static const char *gainame[]={"Jarvis","Friday"};
 
 static void showscore(struct dbs_game *game)
 {
-	printf("%s:Score= %u",game->player[P1].name,game->player[P1].score);
-	printf(" <--VS--> ");
-	printf("%u =Score:%s\n",game->player[P2].score,game->player[P2].name);
+	printf("%s:Score-< %u",game->player[P1].name,game->player[P1].score);
+	printf(" >--VS--< ");
+	printf("%u >-Score:%s\n",game->player[P2].score,game->player[P2].name);
 
 }
 

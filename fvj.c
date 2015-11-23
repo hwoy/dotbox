@@ -23,6 +23,7 @@ static unsigned int basename (const char *ch);
 
 static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
 "AI no more move","Memmory can't be allocated","Game over","Normal","AI best move","AI worse move","AI random move",\
+"Hit score",\
 NULL};
 
 static dbv_ai gai[]={dbf_aiv1_Friday,dbf_aiv2_Jarvis};
@@ -159,6 +160,7 @@ do
 	printTable(&game,LEN);
 	putchar('\n');
 	
+	if(gpid!=gp_hitscore)
 	pindex=!pindex;
 
 }while(gpid!=gp_gameover);

@@ -81,7 +81,7 @@ int dbf_isgameover(struct dbs_game *game);
 
 enum
 {
-gp_invline=-7,gp_invx=-6,gp_invy=-5,ai_nomove=-4,ai_errmalloc=-3,gp_gameover=-2,gp_gamenormal=-1,ai_best=0,ai_worse=1,ai_random=2
+gp_invline=-7,gp_invx=-6,gp_invy=-5,ai_nomove=-4,ai_errmalloc=-3,gp_gameover=-2,gp_gamenormal=-1,ai_best=0,ai_worse=1,ai_random=2,gp_hitscore=3
 };
 
 #ifdef _DEVRAND_

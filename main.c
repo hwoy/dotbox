@@ -9,8 +9,10 @@
 #define LEN 4
 #define BSIZE 512
 
-#define YOU 0
-#define COM 1
+#define P1 0
+#define P2 1
+#define YOU P1
+#define COM P2
 
 #define PREFIX_X 'x'
 #define PREFIX_Y 'y'
@@ -31,6 +33,7 @@ static int key_option(const char *str,const char *key[],char *buff);
 
 static const char *idstr[NGPID+1+3]={"Invalide line","Invalid line-x","Invalid line-y",\
 "AI no more move","Memmory can't be allocated","Game over","Normal","AI best move","AI worse move","AI random move",\
+"Hit score",\
 NULL};
 
 static const char *key[]={"x","y","s","1","2","-","+","t","h",NULL};
@@ -228,6 +231,7 @@ do
 	printTable(&game,LEN);
 	putchar('\n');
 	
+	if(gpid!=gp_hitscore)
 	pindex=!pindex;
 
 }while(gpid!=gp_gameover);

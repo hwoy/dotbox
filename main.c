@@ -159,10 +159,10 @@ int main(int argc, const char *argv[])
 	}
 	}	
 	
-for(;;)
-{	
-NEW_GAME:
 	
+NEW_GAME:
+do
+{	
 	if(!dbf_init(&game,p1name,p2name,squar,ai))
 		return showErr (err_str, err_initgame, "dbf_init");
 
@@ -398,12 +398,10 @@ ch=answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES);
 		
 		pindex=dbf_random(0,1);
 	
-		continue;
 	}
 	
-	break;
 	
-}
+}while(ch!=NO);
 	
 
 

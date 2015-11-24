@@ -12,7 +12,6 @@
 
 
 static void showscore(struct dbs_game *game);
-static void showHelp (const char *str, const char **param,const char **hparam);
 static int showErr (const char **str, int errno, const char *msg);
 static unsigned int basename (const char *ch);
 
@@ -30,24 +29,6 @@ static void showscore(struct dbs_game *game)
 	printf(" >--VS--< ");
 	printf("%u >-Score:%s\n",game->player[P2].score,game->player[P2].name);
 
-}
-
-static void showHelp (const char *str, const char **param, const char **hparam)
-{
-  unsigned int i;
-  fprintf (stderr, "\nUSAGE: %s [option list]\n\n", &str[basename (str)]);
-
-  fprintf (stderr, "[OPTIONS]\n");
-
-  for (i = 0; param[i] && hparam[i]; i++)
-    {
-      fprintf (stderr, "%s\t\t%s\n", param[i], hparam[i]);
-    }
-  fprintf (stderr, "\n");
-
-  fprintf (stderr, "[DEFAULT]\n");
-  fprintf (stderr, "%s%u\n", param[0], D_SQR);
-  fprintf (stderr, "\n");
 }
 
 static int showErr (const char **str, int errno, const char *msg)

@@ -1,7 +1,7 @@
 CC=gcc
 bin1=dotbox
 bin2=fvj
-CFLAGS=-O2 -std=c89 -pedantic #-Wall -Werror # -D_DEVRAND_ # for better random numbers
+CFLAGS=-O2 -std=c89 -pedantic -Wall -Werror # -D_DEVRAND_ # for better random numbers
 .PHONY: all clean
 
 all: $(bin1) $(bin2)

@@ -4,6 +4,7 @@
 #include "dotbox.h"
 #include "dotbox_io.h"
 #include "function.h"
+#include "opt.h"
 
 
 #include "common.h"
@@ -18,23 +19,49 @@
 #define YES 'y'
 #define NO 'n'
 
+#define NLENGTH 64
+
 
 
 
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(const char *key[],const char *keystr[]);
 static int key_option(const char *str,const char *key[],char *buff);
+static void showHelp (const char *str, const char **param,const char **hparam);
 
 
-static const char *key[]={"x","y","s","1","2","-","+","t","h",NULL};
-static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value",\
+static const char *key[]={"x","y","s:","n:","1","2","-","+","t","h",NULL};
+static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Rename",\
 "AI version 1","AI version 2","Quit game","New Game","Show game table","Show keys help",NULL};
 enum
 {
-	k_x,k_y,k_s,k_1,k_2,k_quit,k_new,k_tab,k_help
+	k_x,k_y,k_s,k_n,k_1,k_2,k_quit,k_new,k_t,k_help
 };
 
 static const char d_p1name[]="YOU";
+
+
+static const char *cptrarr_param[] =
+  { "-s:", "-n:","-1","-2","-y","-c","-l:","-h", NULL };
+static const char *helpparam[] =
+  { "Squar", "Player Name","AI version 1","AI version 2","You go first","Com go first","Squar length",\
+  "Help",NULL
+};
+ enum
+{
+  opt_s, opt_n,opt_1,opt_2,opt_y,opt_c,opt_l,opt_h
+};
+
+static const char *err_str[] =
+  { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game",\
+  "Over maximum name length","Squar length equal zero","Line X over limit","Line Y over limit",\
+  NULL
+};
+
+enum
+{
+  err_inv, err_ni, err_sz, err_initgame,err_nl,err_lz,err_xo,err_yo
+};
 
 int main(int argc, const char *argv[])
 {
@@ -44,7 +71,8 @@ int main(int argc, const char *argv[])
 	unsigned int pindex;
 	unsigned int ui_cindex;
 	unsigned int x,y;
-	static char buff[BSIZE+1],carray_buff[BSIZE];
+	unsigned int length;
+	static char buff[BSIZE+1],carray_buff[BSIZE],op1name[NLENGTH+1];
 	struct dbs_game game;
 	struct dbs_line line;
 	
@@ -52,26 +80,86 @@ int main(int argc, const char *argv[])
 	const char *p1name,*p2name;
 	dbv_ai ai;
 	
-	squar=D_SQR;
-	p1name=d_p1name;
-	
-	
 	#ifndef _DEVRAND_
 	dbf_srandom(time(NULL));
 	#endif
 	
-NEW_GAME:
-
+	squar=D_SQR;
+	p1name=d_p1name;
+	length=LEN;
 	
 	j=dbf_random(0,1);
 	ai=gai[j];
 	p2name=gainame[j];
 	
-	dbf_init(&game,p1name,p2name,squar,ai);
 	pindex=dbf_random(0,1);
 
+
+	  for (ui_cindex = DSTART; (i =
+		       opt_action (argc, argv, cptrarr_param, carray_buff,
+				   BSIZE, DSTART)) != e_optend; ui_cindex++)
+    {
+      switch (i)
+	{
+		case opt_s:
+		if (!isUint (carray_buff))
+			return showErr (err_str, err_ni, carray_buff);
+		squar = s2ui (carray_buff);	
+		if(!squar)
+			return showErr (err_str, err_sz, carray_buff);
+		break;
+		
+		case opt_n:
+		if(sLen(carray_buff)>NLENGTH)
+		{
+			j=showErr (err_str, err_nl, carray_buff);
+			fprintf(stderr,"\nMax name length = %u\n",NLENGTH);
+			return j;
+		}
+		strcpy(op1name,carray_buff);
+		p1name=op1name;
+		break;
+		
+		case opt_1:
+		case opt_2:
+		ai=gai[i-opt_1];
+		p2name=gainame[i-opt_1];
+		break;
+		
+		case opt_y:
+		pindex=YOU;
+		break;
+		
+		case opt_c:
+		pindex=COM;
+		break;
+		
+		case opt_l:
+		if (!isUint (carray_buff))
+			return showErr (err_str, err_ni, carray_buff);
+		length = s2ui (carray_buff);	
+		if(!length)
+			return showErr (err_str, err_lz, carray_buff);
+		break;
+		
+		case opt_h:
+		showHelp (argv[0], cptrarr_param, helpparam);
+		return 1;
+		
+		default:
+		showHelp (argv[0], cptrarr_param, helpparam);
+		return showErr (err_str, err_inv, carray_buff);
+	}
+	}	
+	
+	
+NEW_GAME:
+	
+	if(!dbf_init(&game,p1name,p2name,squar,ai))
+		return showErr (err_str, err_initgame, "dbf_init");
+
 	putchar('\n');
-	printTable(&game,LEN);
+	printTable(&game,length);
 	putchar('\n');
 	
 do
@@ -104,27 +192,45 @@ do
 		do
 		{
 		putchar('\n');		
-		printf("Enter a line (%s=help) --> ",key[8]);
+		printf("Enter a line (%s=help) --> ",key[9]);
 		
 		dio_getstr(buff,BSIZE);
 		i=key_option(buff,key,carray_buff);
 	  switch(i)
 	  {
+/*************** Key X(line-x) ***************/
 		  case k_x:
-		if(!isUint(carray_buff)) 		{i*=-1;continue;}
+		if(!isUint(carray_buff)) 		
+		{
+			showErr (err_str, err_ni, carray_buff);
+			i++;i*=-1;continue;
+		}
 		x=s2ui(carray_buff);
-		if(x>=game.sqr*(game.sqr+1)) 	{i*=-1;continue;}	
+		if(x>=game.sqr*(game.sqr+1))
+		{
+			showErr (err_str, err_xo, carray_buff);
+			i++;i*=-1;continue;
+		}			
 		dbf_getpointlinex(&game,x,&line);
 		break;
 		
-		
+/*************** Key Y(line-y) ***************/		
 		  case k_y:
-		if(!isUint(carray_buff)) 		{i*=-1;continue;}
+		if(!isUint(carray_buff))
+		{
+			showErr (err_str, err_ni, carray_buff);
+			i++;i*=-1;continue;
+		}
 		y=s2ui(carray_buff);
-		if(y>=game.sqr*(game.sqr+1)) 	{i*=-1;continue;}
+		if(y>=game.sqr*(game.sqr+1))
+		{
+			showErr (err_str, err_yo, carray_buff);
+			i++;i*=-1;continue;
+		}
 		dbf_getpointliney(&game,y,&line);		  
 		  break;
 		  
+/*************** Key 1(v1-Jarvis) or 2(v2-Friday) ***************/		  
 		  case k_1:
 		  case k_2:
 		  ai=gai[i-k_1];
@@ -132,30 +238,63 @@ do
 		  p2name=gainame[i-k_1];
 		  game.player[COM].name=p2name;
 		  printf("AI codename: %s activated!",p2name);
+		  break;
 		  
+		  case k_n:
+			if(sLen(carray_buff)>NLENGTH)
+				{
+					showErr (err_str, err_nl, carray_buff);
+					fprintf(stderr,"\nMax name length = %u\n",NLENGTH);
+					i++;i*=-1;continue;
+				}
+			strcpy(op1name,carray_buff);
+			p1name=op1name;
+			game.player[pindex].name=p1name;
+			printf("Setting Your name to %s\n",p1name);
+			break;
+
+/*************** Key S:(Squar) ***************/			
 		  case k_s:
-		if(!isUint(carray_buff)) 		{i*=-1;continue;}
+		if(!isUint(carray_buff))
+		{
+			showErr (err_str, err_ni, carray_buff);
+			i++;i*=-1;continue;
+		}
 		squar=s2ui(carray_buff);
-		if(squar==0)					{i*=-1;continue;}
-		  
+		if(squar==0)
+		{
+			showErr (err_str, err_sz, carray_buff);
+			i++;i*=-1;continue;
+		}
+
+/*************** Key +(New Game) ***************/		
 		  case k_new:
 		dbf_destroy(&game);
+		
+		j=dbf_random(0,1);
+		ai=gai[j];
+		p2name=gainame[j];
+		
+		pindex=dbf_random(0,1);
+	
 		goto NEW_GAME;
-		  
-		  case k_tab:
+
+/*************** Key T(Table) ***************/		
+		  case k_t:
 		putchar('\n');
 		showscore(&game);
 		putchar('\n');
 	
 		putchar('\n');
-		printTable(&game,LEN);
+		printTable(&game,length);
 		putchar('\n');
 		break;
-
+/*************** Key H(Help) ***************/
 		  case k_help:
 		  helpkey(key,keystr);
 		  break;		
-		 
+
+/*************** Key -(Quit) ***************/		  
 		  case k_quit:
 		if(answer("Do you want to quit this game?\n(Y/n)",buff,BSIZE,YES)==YES)
 			goto QUIT_GAME;
@@ -192,6 +331,7 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
+			if(pindex==COM) PRINTTAB();fprintf(stderr,"Fatal Error: require quit game\n");
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -212,7 +352,7 @@ do
 	putchar('\n');
 	
 	putchar('\n');
-	printTable(&game,LEN);
+	printTable(&game,length);
 	putchar('\n');
 	
 	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
@@ -225,14 +365,6 @@ QUIT_GAME:
 	dbf_destroy(&game);
 	return 0;
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -272,11 +404,14 @@ static void helpkey(const char *key[],const char *keystr[])
 	fprintf(stderr,"%s\n","[EXAMPLE]");
 	fputc('\n',stderr);
 	
-	fprintf(stderr,"%5s%u\tEnter x line %u\n",key[0],i,i=dbf_random(0,D_SQR*(D_SQR+1)-1));
-	fprintf(stderr,"%5s%u\tEnter y line %u\n",key[1],i,i=dbf_random(0,D_SQR*(D_SQR+1)-1));
-	fprintf(stderr,"%5s%u\tEnter a squar value %u\n",key[2],i,i=dbf_random(2,10));
-	fprintf(stderr,"%5s\tQuit Game\n",key[5]);
-	fprintf(stderr,"%5s\tNew Game\n",key[6]);
+	i=dbf_random(0,D_SQR*(D_SQR+1)-1);
+	fprintf(stderr,"%5s%u\tEnter x line %u\n",key[0],i,i);
+	i=dbf_random(0,D_SQR*(D_SQR+1)-1);
+	fprintf(stderr,"%5s%u\tEnter y line %u\n",key[1],i,i);
+	i=dbf_random(2,10);
+	fprintf(stderr,"%5s%u\tEnter a squar value %u\n",key[2],i,i);
+	fprintf(stderr,"%5s\tQuit Game\n",key[6]);
+	fprintf(stderr,"%5s\tNew Game\n",key[7]);
 	
 	fputc('\n',stderr);
 }
@@ -299,4 +434,24 @@ static int key_option(const char *str,const char *key[],char *buff)
 	}
 	
 	return -1;
+}
+
+static void showHelp (const char *str, const char **param, const char **hparam)
+{
+	unsigned int i;
+  fprintf (stderr, "\nUSAGE: %s [option list]\n\n", &str[basename (str)]);
+
+  fprintf (stderr, "[OPTIONS]\n");
+
+  for (i = 0; param[i] && hparam[i]; i++)
+    {
+      fprintf (stderr, "%s\t\t%s\n", param[i], hparam[i]);
+    }
+  fprintf (stderr, "\n");
+
+  fprintf (stderr, "[DEFAULT]\n");
+  fprintf (stderr, "%s%u\n", param[0], D_SQR);
+  fprintf (stderr, "%s%s\n", param[1], d_p1name);
+  fprintf (stderr, "%s%u\n", param[6], LEN);
+  fprintf (stderr, "\n");
 }

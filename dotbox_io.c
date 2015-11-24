@@ -11,7 +11,7 @@ void printTable(struct dbs_game *game,unsigned int len)
 	putchar('\n');
 	for(y=0;y<game->sqr+1;y++)
 	{
-		for(j=0;j<len;j++)
+		for(j=0;j<len+1;j++)
 		{
 			putchar('\t');
 		for(x=0;x<game->sqr+1;x++)

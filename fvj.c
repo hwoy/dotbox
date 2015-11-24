@@ -6,7 +6,7 @@
 #include "opt.h"
 
 #include "common.h"
-
+static void showHelp (const char *str, const char **param,const char **hparam);
 
 static const char *cptrarr_param[] =
   { "-s:", "-h", NULL };
@@ -112,6 +112,7 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
+			if(pindex==P2) PRINTTAB();fprintf(stderr,"Fatal Error: require quit game\n");
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -145,4 +146,23 @@ QUIT_GAME:
 	return 0;
 
 }
+
+static void showHelp (const char *str, const char **param, const char **hparam)
+{
+  unsigned int i;
+  fprintf (stderr, "\nUSAGE: %s [option list]\n\n", &str[basename (str)]);
+
+  fprintf (stderr, "[OPTIONS]\n");
+
+  for (i = 0; param[i] && hparam[i]; i++)
+    {
+      fprintf (stderr, "%s\t\t%s\n", param[i], hparam[i]);
+    }
+  fprintf (stderr, "\n");
+
+  fprintf (stderr, "[DEFAULT]\n");
+  fprintf (stderr, "%s%u\n", param[0], D_SQR);
+  fprintf (stderr, "\n");
+}
+
 

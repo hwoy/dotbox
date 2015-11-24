@@ -21,21 +21,18 @@
 
 #define NLENGTH 64
 
-
-
-
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(const char *key[],const char *keystr[]);
 static int key_option(const char *str,const char *key[],char *buff);
 static void showHelp (const char *str, const char **param,const char **hparam);
 
 
-static const char *key[]={"x","y","s:","n:","1","2","-","+","t","h",NULL};
-static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Rename",\
+static const char *key[]={"x","y","s:","l:","n:","1","2","-","+","t","h",NULL};
+static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Enter a squar length","Rename",\
 "AI version 1","AI version 2","Quit game","New Game","Show game table","Show keys help",NULL};
 enum
 {
-	k_x,k_y,k_s,k_n,k_1,k_2,k_quit,k_new,k_t,k_help
+	k_x,k_y,k_s,k_l,k_n,k_1,k_2,k_quit,k_new,k_t,k_help
 };
 
 static const char d_p1name[]="YOU";
@@ -192,7 +189,7 @@ do
 		do
 		{
 		putchar('\n');		
-		printf("Enter a line (%s=help) --> ",key[9]);
+		printf("Enter a line (%s=help) --> ",key[10]);
 		
 		dio_getstr(buff,BSIZE);
 		i=key_option(buff,key,carray_buff);
@@ -252,6 +249,7 @@ do
 			game.player[pindex].name=p1name;
 			printf("Setting Your name to %s\n",p1name);
 			break;
+			
 
 /*************** Key S:(Squar) ***************/			
 		  case k_s:
@@ -279,6 +277,21 @@ do
 	
 		goto NEW_GAME;
 
+/*************** Key L:(Squar Length) ***************/
+
+		  case k_l:
+		if(!isUint(carray_buff))
+		{
+			showErr (err_str, err_ni, carray_buff);
+			i++;i*=-1;continue;
+		}
+		length=s2ui(carray_buff);
+		if(length==0)
+		{
+			showErr (err_str, err_lz, carray_buff);
+			i++;i*=-1;continue;
+		}
+		
 /*************** Key T(Table) ***************/		
 		  case k_t:
 		putchar('\n');
@@ -410,8 +423,8 @@ static void helpkey(const char *key[],const char *keystr[])
 	fprintf(stderr,"%5s%u\tEnter y line %u\n",key[1],i,i);
 	i=dbf_random(2,10);
 	fprintf(stderr,"%5s%u\tEnter a squar value %u\n",key[2],i,i);
-	fprintf(stderr,"%5s\tQuit Game\n",key[6]);
-	fprintf(stderr,"%5s\tNew Game\n",key[7]);
+	fprintf(stderr,"%5s\tQuit Game\n",key[7]);
+	fprintf(stderr,"%5s\tNew Game\n",key[8]);
 	
 	fputc('\n',stderr);
 }

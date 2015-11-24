@@ -9,23 +9,23 @@
 static void showHelp (const char *str, const char **param,const char **hparam);
 
 static const char *cptrarr_param[] =
-  { "-s:", "-h", NULL };
+  { "-s:","-l:","-1","-2","-h", NULL };
 static const char *helpparam[] =
-  { "Squar", "Help",
+  { "Squar","Squar length","AI V1-Jarvis go first","AI V2-Friday go first","Help",
   NULL
 };
  enum
 {
-  opt_s, opt_h
+  opt_s,opt_l,opt_1,opt_2, opt_h
 };
 
 static const char *err_str[] =
-  { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game", NULL
+  { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game","Squar length equal zero", NULL
 };
 
 enum
 {
-  err_inv, err_ni, err_sz, err_initgame
+  err_inv, err_ni, err_sz, err_initgame, err_lz
 };
 
 int main(int argc, const char *argv[])
@@ -33,6 +33,7 @@ int main(int argc, const char *argv[])
 	int i;
 	unsigned int aiid,gpid;
 	unsigned int pindex;
+	unsigned int length;
 	static char carray_buff[BSIZE];
 	unsigned int ui_cindex;
 	struct dbs_game game;
@@ -47,6 +48,7 @@ int main(int argc, const char *argv[])
 	#endif
 
 	squar=D_SQR;
+	length=LEN;
 	p1name=gainame[P1];
 	p2name=gainame[P2];
 	pindex=dbf_random(0,1);
@@ -65,6 +67,19 @@ int main(int argc, const char *argv[])
 			return showErr (err_str, err_sz, carray_buff);
 		break;
 		
+		case opt_l:
+		if (!isUint (carray_buff))
+			return showErr (err_str, err_ni, carray_buff);
+		length = s2ui (carray_buff);	
+		if(!length)
+			return showErr (err_str, err_lz, carray_buff);
+		break;
+		
+		case opt_1:
+		case opt_2:
+		pindex=i-opt_1;
+		break;
+		
 		case opt_h:
 		showHelp (argv[0], cptrarr_param, helpparam);
 		return 1;
@@ -79,7 +94,7 @@ int main(int argc, const char *argv[])
 		return showErr (err_str, err_initgame, "dbf_init");
 
 	putchar('\n');
-	printTable(&game,LEN);
+	printTable(&game,length);
 	putchar('\n');
 	
 do
@@ -132,7 +147,7 @@ do
 	putchar('\n');
 	
 	putchar('\n');
-	printTable(&game,LEN);
+	printTable(&game,length);
 	putchar('\n');
 	
 	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
@@ -162,6 +177,7 @@ static void showHelp (const char *str, const char **param, const char **hparam)
 
   fprintf (stderr, "[DEFAULT]\n");
   fprintf (stderr, "%s%u\n", param[0], D_SQR);
+  fprintf (stderr, "%s%u\n", param[1], LEN);
   fprintf (stderr, "\n");
 }
 

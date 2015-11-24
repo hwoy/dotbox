@@ -127,7 +127,7 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==P2) PRINTTAB();fprintf(stderr,"Fatal Error: require quit game\n");
+			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Fatal Error: require quit game\n");
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -136,7 +136,8 @@ do
 		/************** Tiny Error(GP) **************/
 		if(gpid>=gp_invline) 
 		{
-			continue;
+			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Error: Quit game for breaking point\n");
+			goto QUIT_GAME;
 		}
 		/************** Tiny Error(GP) **************/		
 		
@@ -155,6 +156,7 @@ do
 
 }while(gpid!=gp_gameover);
 
+summary(&game);
 
 QUIT_GAME:
 	dbf_destroy(&game);

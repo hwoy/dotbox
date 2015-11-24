@@ -14,6 +14,7 @@
 static void showscore(struct dbs_game *game);
 static int showErr (const char **str, int errno, const char *msg);
 static unsigned int basename (const char *ch);
+static void summary(struct dbs_game *game);
 
 
 static const char *idstr[]={"AI best move","AI worse move","AI random move","Hit score","Double tab","Game over","Normal",\
@@ -50,3 +51,37 @@ basename (const char *ch)
     }
   return (j == 0) ? 0 : j + 1;
 }
+
+static void summary(struct dbs_game *game)
+{
+	char *p1msg,*p2msg;
+	
+	printf("\n\n");
+	printf("%s\n\n","**************** [Game summary] ****************");
+	printf("%-10s%10s\t%10s\n\n","","PLAYER1","PLAYER2");
+	printf("%-10s%10s\t%10s\n","PNAME|",game->player[0].name,game->player[1].name);
+	printf("%-10s%10u\t%10u\n","DBTAB|",game->player[0].doubletab,game->player[1].doubletab);
+	printf("%-10s%10u\t%10u\n","PHITS|",game->player[0].score-game->player[0].doubletab,game->player[1].score-game->player[1].doubletab);
+	printf("%-10s%10u\t%10u\n","SCORE|",game->player[0].score,game->player[1].score);
+	
+	if(game->player[0].score > game->player[1].score)
+	{
+		p1msg="Win";
+		p2msg="Lose";
+	}
+	else if(game->player[0].score < game->player[1].score)
+	{
+		p2msg="Win";
+		p1msg="Lose";		
+	}
+	else
+	{
+		p1msg=p2msg="Draw";
+	}
+	printf("\n");
+	printf("%-10s%10s\t%10s\n","RESLT|",p1msg,p2msg);
+
+	printf("\n");	
+	printf("%s\n\n","**************** [Game summary] ****************");
+}
+

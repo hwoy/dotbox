@@ -19,13 +19,16 @@
 #define YES 'y'
 #define NO 'n'
 
-#define NLENGTH 64
+#define NLENGTH 10
 
 static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(const char *key[],const char *keystr[]);
-static int key_option(const char *str,const char *key[],char *buff);
+static int key_option(const char *str,const char *key[],char *buff,unsigned int size);
 static void showHelp (const char *str, const char **param,const char **hparam);
 
+static const char d_p1name[]="YOU";
+
+/*********************************************** Keys ***********************************************/
 
 static const char *key[]={"x","y","s:","l:","n:","1","2","-","+","t","h",NULL};
 static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Enter a squar length","Rename",\
@@ -35,8 +38,9 @@ enum
 	k_x,k_y,k_s,k_l,k_n,k_1,k_2,k_quit,k_new,k_t,k_help
 };
 
-static const char d_p1name[]="YOU";
+/*********************************************** Keys ***********************************************/
 
+/*********************************************** Options ***********************************************/
 
 static const char *cptrarr_param[] =
   { "-s:", "-n:","-1","-2","-y","-c","-l:","-h", NULL };
@@ -49,6 +53,9 @@ static const char *helpparam[] =
   opt_s, opt_n,opt_1,opt_2,opt_y,opt_c,opt_l,opt_h
 };
 
+/*********************************************** Options ***********************************************/
+
+/*********************************************** Error massages ***********************************************/
 static const char *err_str[] =
   { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game",\
   "Over maximum name length","Squar length equal zero","Line X over limit","Line Y over limit",\
@@ -59,6 +66,8 @@ enum
 {
   err_inv, err_ni, err_sz, err_initgame,err_nl,err_lz,err_xo,err_yo
 };
+
+/*********************************************** Error massages ***********************************************/
 
 int main(int argc, const char *argv[])
 {
@@ -151,7 +160,8 @@ int main(int argc, const char *argv[])
 	
 	
 NEW_GAME:
-	
+do
+{	
 	if(!dbf_init(&game,p1name,p2name,squar,ai))
 		return showErr (err_str, err_initgame, "dbf_init");
 
@@ -192,7 +202,7 @@ do
 		printf("Enter a line (%s=help) --> ",key[10]);
 		
 		dio_getstr(buff,BSIZE);
-		i=key_option(buff,key,carray_buff);
+		i=key_option(buff,key,carray_buff,BSIZE);
 	  switch(i)
 	  {
 /*************** Key X(line-x) ***************/
@@ -373,6 +383,8 @@ do
 
 }while(gpid!=gp_gameover);
 
+summary(&game);
+}while(answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES)==YES);
 
 QUIT_GAME:
 	dbf_destroy(&game);
@@ -430,7 +442,7 @@ static void helpkey(const char *key[],const char *keystr[])
 }
 
 
-static int key_option(const char *str,const char *key[],char *buff)
+static int key_option(const char *str,const char *key[],char *buff,unsigned int size)
 {
 	unsigned int i,j,k;
 	for(i=0;key[i];i++)
@@ -439,6 +451,9 @@ static int key_option(const char *str,const char *key[],char *buff)
 		{
 			for(k=0,j=strlen(key[i]);str[j];j++,k++)
 			{
+				if(k>size-1)
+					return -2;
+				
 				buff[k]=str[j];
 			}
 			buff[k]=0;

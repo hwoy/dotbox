@@ -57,10 +57,12 @@ struct dbs_game *dbf_init(struct dbs_game *game,const char *p1name,const char *p
 	
 	game->player[0].name=p1name;
 	game->player[0].score=0;
+	game->player[0].doubletab=0;
 	
 
 	game->player[1].name=p2name;
-	game->player[1].score=0;	
+	game->player[1].score=0;
+	game->player[1].doubletab=0;	
 	
 	game->sqr=sqr;
 	game->ai=ai;
@@ -460,7 +462,7 @@ unsigned int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs
 	
 	if(dbf_countsqr(game) > count)
 	{
-		result=(dbf_countsqr(game)-count>1)?gp_doubletab:gp_hitscore;
+		result=(dbf_countsqr(game)-count>1)?(player->doubletab++,gp_doubletab):gp_hitscore;
 		player->score += dbf_countsqr(game)-count;
 		return dbf_isgameover(game)==gp_gameover?gp_gameover:result;
 	}

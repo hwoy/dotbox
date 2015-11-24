@@ -22,6 +22,7 @@ struct dbs_player
 {
 	const char *name;
 	unsigned int score;
+	unsigned int doubletab;
 	
 };
 

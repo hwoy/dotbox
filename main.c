@@ -79,6 +79,7 @@ int main(int argc, const char *argv[])
 	unsigned int x,y;
 	unsigned int length;
 	static char buff[BSIZE+1],carray_buff[BSIZE],op1name[NLENGTH+1];
+	char ch;
 	struct dbs_game game;
 	struct dbs_line line;
 	
@@ -158,10 +159,10 @@ int main(int argc, const char *argv[])
 	}
 	}	
 	
-	
-NEW_GAME:
-do
+for(;;)
 {	
+NEW_GAME:
+	
 	if(!dbf_init(&game,p1name,p2name,squar,ai))
 		return showErr (err_str, err_initgame, "dbf_init");
 
@@ -384,7 +385,27 @@ do
 }while(gpid!=gp_gameover);
 
 summary(&game);
-}while(answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES)==YES);
+
+ch=answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES);
+
+	if(ch==YES)
+	{
+		dbf_destroy(&game);
+		
+		j=dbf_random(0,1);
+		ai=gai[j];
+		p2name=gainame[j];
+		
+		pindex=dbf_random(0,1);
+	
+		continue;
+	}
+	
+	break;
+	
+}
+	
+
 
 QUIT_GAME:
 	dbf_destroy(&game);

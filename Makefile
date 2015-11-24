@@ -17,7 +17,6 @@ clean:
 
 
 dotbox.o: dotbox.c dotbox.h
-	$(CC) $(CFLAGS) -c dotbox.c
 
 dotbox_io.o: dotbox_io.c dotbox.h dotbox_io.h
 

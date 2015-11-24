@@ -54,32 +54,33 @@ basename (const char *ch)
 
 static void summary(struct dbs_game *game)
 {
-	char *p1msg,*p2msg;
+	const char *p1msg,*p2msg;
+	static const char WIN[]="Win!",LOSE[]="Lose",DRAW[]="Draw";
 	
 	printf("\n\n");
 	printf("%s\n\n","**************** [Game summary] ****************");
 	printf("%-10s%10s\t%10s\n\n","","PLAYER1","PLAYER2");
 	printf("%-10s%10s\t%10s\n","PNAME|",game->player[0].name,game->player[1].name);
 	printf("%-10s%10u\t%10u\n","DBTAB|",game->player[0].doubletab,game->player[1].doubletab);
-	printf("%-10s%10u\t%10u\n","PHITS|",game->player[0].score-game->player[0].doubletab,game->player[1].score-game->player[1].doubletab);
+	printf("%-10s%10u\t%10u\n","PHITS|",game->player[0].score-2*game->player[0].doubletab,game->player[1].score-2*game->player[1].doubletab);
 	printf("%-10s%10u\t%10u\n","SCORE|",game->player[0].score,game->player[1].score);
 	
 	if(game->player[0].score > game->player[1].score)
 	{
-		p1msg="Win";
-		p2msg="Lose";
+		p1msg=WIN;
+		p2msg=LOSE;
 	}
 	else if(game->player[0].score < game->player[1].score)
 	{
-		p2msg="Win";
-		p1msg="Lose";		
+		p2msg=WIN;
+		p1msg=LOSE;		
 	}
 	else
 	{
-		p1msg=p2msg="Draw";
+		p1msg=p2msg=DRAW;
 	}
 	printf("\n");
-	printf("%-10s%10s\t%10s\n","RESLT|",p1msg,p2msg);
+	printf("%-10s%10s\t%10s\n","RESULT",p1msg,p2msg);
 
 	printf("\n");	
 	printf("%s\n\n","**************** [Game summary] ****************");

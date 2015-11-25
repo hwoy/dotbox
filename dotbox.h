@@ -82,7 +82,7 @@ unsigned int dbf_isgameover(struct dbs_game *game);
 
 enum
 {
-ai_best,ai_worse,ai_random,gp_hitscore,gp_doubletab,\
+ai_best,ai_worst,ai_random,gp_hitscore,gp_doubletab,\
 gp_gameover,gp_gamenormal,\
 gp_invline,gp_invx,gp_invy,ai_nomove,ai_errmalloc
 };

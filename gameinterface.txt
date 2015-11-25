@@ -36,13 +36,13 @@ unsigned int = AI ID
 
 enum
 {
-ai_best,ai_worse,ai_random,gp_hitscore,gp_doubletab,\
+ai_best,ai_worst,ai_random,gp_hitscore,gp_doubletab,\
 gp_gameover,gp_gamenormal,\
 gp_invline,gp_invx,gp_invy,ai_nomove,ai_errmalloc
 };
 
 ai_best = 0 == best move at least take one score
-ai_worse = 1 == worse move at least lose one score
+ai_worst = 1 == worst move at least lose one score
 ai_random = 2 == Move and score not be changed
 
 ai_nomove = 10 == AI can not process for a line, considered for ai bugs or game over (No one left)

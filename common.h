@@ -19,7 +19,7 @@ static unsigned int basename (const char *ch);
 static void summary(FILE *fp,struct dbs_game *game);
 
 
-static const char *idstr[]={"AI best move","AI worse move","AI random move","Hit score","Double tab","Game over","Normal",\
+static const char *idstr[]={"AI best move","AI worst move","AI random move","Hit score","Double tab","Game over","Normal",\
 "Invalide line","Invalid line-x","Invalid line-y","AI no more move","Memmory can't be allocated",\
 NULL};
 

@@ -370,7 +370,7 @@ unsigned int dbf_aiv1_Jarvis(struct dbs_game *game,struct dbs_line *line)
 	{
 		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
 		free(lbuff);
-		return (j==2)?ai_worse:ai_random;
+		return (j==2)?ai_worst:ai_random;
 	}
 	}
 		
@@ -441,7 +441,7 @@ unsigned int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 		dbf_copyline(line,&lbuff[dbf_random(0,i-1)]);
 		free(tmp);
 		free(lbuff);
-		return (j==2)?ai_worse:ai_random;
+		return (j==2)?ai_worst:ai_random;
 
 	}
 	}

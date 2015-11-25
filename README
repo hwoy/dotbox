@@ -24,21 +24,43 @@ GITHUB:https://github.com/hwoy
 	*    *    *    	               	               	               	               
 
 
+NAME = Jarvis
+AI_RID = 2*(AI random move)
+MOVE = (1,0) (2,0)
+GP_RID = 6*(Normal)
+
+Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
+
+
+
+	*    *----*    
+	               
+	               
+	               
+	               
+	*    *    *    
+	               
+	               
+	               
+	               
+	*    *    *    	               	               	               	               
+
+
 				NAME = Friday
 				AI_RID = 2*(AI random move)
-				MOVE = (0,1) (1,1)
+				MOVE = (1,0) (1,1)
 				GP_RID = 6*(Normal)
 
 Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
 
 
 
+	*    *----*    
+	     |         
+	     |         
+	     |         
+	     |         
 	*    *    *    
-	               
-	               
-	               
-	               
-	*----*    *    
 	               
 	               
 	               
@@ -48,19 +70,19 @@ Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
 
 NAME = Jarvis
 AI_RID = 2*(AI random move)
-MOVE = (1,0) (1,1)
+MOVE = (0,0) (0,1)
 GP_RID = 6*(Normal)
 
 Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
 
 
 
+	*    *----*    
+	|    |         
+	|    |         
+	|    |         
+	|    |         
 	*    *    *    
-	     |         
-	     |         
-	     |         
-	     |         
-	*----*    *    
 	               
 	               
 	               
@@ -77,12 +99,12 @@ Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
 
 
 
+	*    *----*    
+	|    |         
+	|    |         
+	|    |         
+	|    |         
 	*    *    *    
-	     |         
-	     |         
-	     |         
-	     |         
-	*----*    *    
 	     |         
 	     |         
 	     |         
@@ -92,50 +114,6 @@ Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
 
 NAME = Jarvis
 AI_RID = 2*(AI random move)
-MOVE = (2,1) (2,2)
-GP_RID = 6*(Normal)
-
-Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
-
-
-
-	*    *    *    
-	     |         
-	     |         
-	     |         
-	     |         
-	*----*    *    
-	     |    |    
-	     |    |    
-	     |    |    
-	     |    |    
-	*    *    *    	               	               	               	               
-
-
-				NAME = Friday
-				AI_RID = 2*(AI random move)
-				MOVE = (1,0) (2,0)
-				GP_RID = 6*(Normal)
-
-Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
-
-
-
-	*    *----*    
-	     |         
-	     |         
-	     |         
-	     |         
-	*----*    *    
-	     |    |    
-	     |    |    
-	     |    |    
-	     |    |    
-	*    *    *    	               	               	               	               
-
-
-NAME = Jarvis
-AI_RID = 1*(AI worse move)
 MOVE = (0,2) (1,2)
 GP_RID = 6*(Normal)
 
@@ -144,21 +122,65 @@ Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
 
 
 	*    *----*    
+	|    |         
+	|    |         
+	|    |         
+	|    |         
+	*    *    *    
 	     |         
 	     |         
 	     |         
 	     |         
-	*----*    *    
-	     |    |    
-	     |    |    
-	     |    |    
-	     |    |    
 	*----*    *    	               	               	               	               
 
 
 				NAME = Friday
+				AI_RID = 2*(AI random move)
+				MOVE = (1,2) (2,2)
+				GP_RID = 6*(Normal)
+
+Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
+
+
+
+	*    *----*    
+	|    |         
+	|    |         
+	|    |         
+	|    |         
+	*    *    *    
+	     |         
+	     |         
+	     |         
+	     |         
+	*----*----*    	               	               	               	               
+
+
+NAME = Jarvis
+AI_RID = 1*(AI worst move)
+MOVE = (2,1) (2,2)
+GP_RID = 6*(Normal)
+
+Jarvis:Score-< 0 >--VS--< 0 >-Score:Friday
+
+
+
+	*    *----*    
+	|    |         
+	|    |         
+	|    |         
+	|    |         
+	*    *    *    
+	     |    |    
+	     |    |    
+	     |    |    
+	     |    |    
+	*----*----*    	               	               	               	               
+
+
+				NAME = Friday
 				AI_RID = 0*(AI best move)
-				MOVE = (0,1) (0,2)
+				MOVE = (1,1) (2,1)
 				GP_RID = 3*(Hit score)
 
 Jarvis:Score-< 0 >--VS--< 1 >-Score:Friday
@@ -166,110 +188,88 @@ Jarvis:Score-< 0 >--VS--< 1 >-Score:Friday
 
 
 	*    *----*    
-	     |         
-	     |         
-	     |         
-	     |         
-	*----*    *    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	*----*    *    	               	               	               	               
-
-
-				NAME = Friday
-				AI_RID = 1*(AI worse move)
-				MOVE = (1,1) (2,1)
-				GP_RID = 6*(Normal)
-
-Jarvis:Score-< 0 >--VS--< 1 >-Score:Friday
-
-
-
-	*    *----*    
-	     |         
-	     |         
-	     |         
-	     |         
-	*----*----*    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	*----*    *    	               	               	               	               
-
-
-NAME = Jarvis
-AI_RID = 0*(AI best move)
-MOVE = (2,0) (2,1)
-GP_RID = 3*(Hit score)
-
-Jarvis:Score-< 1 >--VS--< 1 >-Score:Friday
-
-
-
+	|    |         
+	|    |         
+	|    |         
+	|    |         
 	*    *----*    
 	     |    |    
 	     |    |    
 	     |    |    
 	     |    |    
-	*----*----*    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	*----*    *    	               	               	               	               
-
-
-NAME = Jarvis
-AI_RID = 0*(AI best move)
-MOVE = (1,2) (2,2)
-GP_RID = 3*(Hit score)
-
-Jarvis:Score-< 2 >--VS--< 1 >-Score:Friday
-
-
-
-	*    *----*    
-	     |    |    
-	     |    |    
-	     |    |    
-	     |    |    
-	*----*----*    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	*----*----*    	               	               	               	               
-
-
-NAME = Jarvis
-AI_RID = 1*(AI worse move)
-MOVE = (0,0) (1,0)
-GP_RID = 6*(Normal)
-
-Jarvis:Score-< 2 >--VS--< 1 >-Score:Friday
-
-
-
-	*----*----*    
-	     |    |    
-	     |    |    
-	     |    |    
-	     |    |    
-	*----*----*    
-	|    |    |    
-	|    |    |    
-	|    |    |    
-	|    |    |    
 	*----*----*    	               	               	               	               
 
 
 				NAME = Friday
 				AI_RID = 0*(AI best move)
-				MOVE = (0,0) (0,1)
-				GP_RID = 5*(Game over)
+				MOVE = (2,0) (2,1)
+				GP_RID = 3*(Hit score)
+
+Jarvis:Score-< 0 >--VS--< 2 >-Score:Friday
+
+
+
+	*    *----*    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	*    *----*    
+	     |    |    
+	     |    |    
+	     |    |    
+	     |    |    
+	*----*----*    	               	               	               	               
+
+
+				NAME = Friday
+				AI_RID = 1*(AI worst move)
+				MOVE = (0,1) (0,2)
+				GP_RID = 6*(Normal)
+
+Jarvis:Score-< 0 >--VS--< 2 >-Score:Friday
+
+
+
+	*    *----*    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	*    *----*    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	*----*----*    	               	               	               	               
+
+
+NAME = Jarvis
+AI_RID = 0*(AI best move)
+MOVE = (0,1) (1,1)
+GP_RID = 3*(Hit score)
+
+Jarvis:Score-< 1 >--VS--< 2 >-Score:Friday
+
+
+
+	*    *----*    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	*----*----*    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	|    |    |    
+	*----*----*    	               	               	               	               
+
+
+NAME = Jarvis
+AI_RID = 0*(AI best move)
+MOVE = (0,0) (1,0)
+GP_RID = 5*(Game over)
 
 Jarvis:Score-< 2 >--VS--< 2 >-Score:Friday
 
@@ -298,7 +298,7 @@ DBTAB|             0	         0
 PHITS|             2	         2
 SCORE|             2	         2
 
-RESLT|          Draw	      Draw
+RESULT          Draw	      Draw
 
 **************** [Game summary] ****************
 

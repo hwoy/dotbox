@@ -57,7 +57,7 @@ only process for a line
 and return AI ID
 
 AI must can process on varous squar[NxN] bord
-N = 1 to 2^(32)-1 (unsigned int) except zero
+N = 1 to 2^(sizeof(unsigned int)*8)-1 (unsigned int) except zero
 
 AI must return above AI ID
 

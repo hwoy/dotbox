@@ -161,7 +161,7 @@ int main(int argc, const char *argv[])
 	
 	
 NEW_GAME:
-do
+do		/* When Game is over answer YES/NO NO=QUIT */
 {	
 	if(!dbf_init(&game,p1name,p2name,squar,ai))
 		return showErr (err_str, err_initgame, "dbf_init");
@@ -170,9 +170,10 @@ do
 	printTable(&game,length);
 	putchar('\n');
 	
-do
+do		/* Exit loop when gpid==gp_gameover */
 {
-	do{
+	do		/* NORNAL ID <--gp_gamenormal--> ERROR ID*/
+	{
 		
 	switch(pindex)
 	{
@@ -197,7 +198,7 @@ do
 	
 	/************************** HUMAN **************************/
 	case YOU:
-		do
+		do		/* Exit loop when complete x or y line */
 		{
 		putchar('\n');		
 		printf("Enter a line (%s=help) --> ",key[10]);
@@ -329,7 +330,7 @@ do
 
 			
 		
-		}while( i!=k_x && i!=k_y );
+		}while( i!=k_x && i!=k_y );		/* Exit loop when complete x or y line */
 	putchar('\n');
 	printf("NAME = %s\n",game.player[pindex].name);	
 	break;
@@ -369,7 +370,7 @@ do
 		/************** Tiny Error(GP) **************/
 		
 		
-	}while(gpid>gp_gamenormal);
+	}while(gpid>gp_gamenormal);		/* NORNAL ID <--gp_gamenormal--> ERROR ID*/
 	
 	putchar('\n');
 	showscore(&game);
@@ -382,13 +383,12 @@ do
 	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
 	pindex=!pindex;
 
-}while(gpid!=gp_gameover);
+}while(gpid!=gp_gameover);		/* Exit loop when gpid==gp_gameover */
 
 summary(&game);
 
-ch=answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES);
 
-	if(ch==YES)
+	if((ch=answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES))==YES)
 	{
 		dbf_destroy(&game);
 		
@@ -401,7 +401,7 @@ ch=answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES);
 	}
 	
 	
-}while(ch!=NO);
+}while(ch!=NO);		/* When Game is over answer YES/NO NO=QUIT */
 	
 
 

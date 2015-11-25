@@ -452,13 +452,13 @@ static void helpkey(const char *key[],const char *keystr[])
 	fputc('\n',stderr);
 	
 	i=dbf_random(0,D_SQR*(D_SQR+1)-1);
-	fprintf(stderr,"%5s%u\tEnter x line %u\n",key[0],i,i);
+	fprintf(stderr,"%5s%u\t%s %u\n",key[0],i,keystr[0],i);
 	i=dbf_random(0,D_SQR*(D_SQR+1)-1);
-	fprintf(stderr,"%5s%u\tEnter y line %u\n",key[1],i,i);
+	fprintf(stderr,"%5s%u\t%s %u\n",key[1],i,keystr[1],i);
 	i=dbf_random(2,10);
-	fprintf(stderr,"%5s%u\tEnter a squar value %u\n",key[2],i,i);
-	fprintf(stderr,"%5s\tQuit Game\n",key[7]);
-	fprintf(stderr,"%5s\tNew Game\n",key[8]);
+	fprintf(stderr,"%5s%u\t%s %u\n",key[2],i,keystr[2],i);
+	fprintf(stderr,"%5s\t%s\n",key[7],keystr[7]);
+	fprintf(stderr,"%5s\t%s\n",key[8],keystr[8]);
 	
 	fputc('\n',stderr);
 }

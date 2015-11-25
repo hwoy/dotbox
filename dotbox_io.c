@@ -21,24 +21,24 @@ void printTable(FILE *fp,struct dbs_game *game,unsigned int len)
 				fputc('*',fp);
 			if(game->point[y*(game->sqr+1)+x].next_x==STAMP && game->point[y*(game->sqr+1)+x+1].prev_x==STAMP && x<game->sqr)
 			{
-				for(i=0;i<len;i++)fputc('-',fp);
+				for(i=0;i<len;i++)fputc(CHX,fp);
 			}
 			else
 			{
-				for(i=0;i<len;i++)fputc(0x20,fp);
+				for(i=0;i<len;i++)fputc(CHSP,fp);
 			}
 			}
 			else
 			{
 				if(game->point[y*(game->sqr+1)+x].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x].prev_y==STAMP)
 				{
-					fputc('|',fp);
+					fputc(CHY,fp);
 				}
 				else
 				{
-					fputc(0x20,fp);
+					fputc(CHSP,fp);
 				}
-				for(i=0;i<len;i++)fputc(0x20,fp);
+				for(i=0;i<len;i++)fputc(CHSP,fp);
 			}
 		}
 		if(y<game->sqr)fputc('\n',fp);

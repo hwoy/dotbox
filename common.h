@@ -6,15 +6,17 @@
 #define P1 0
 #define P2 1
 
-
-#define PRINTTAB() printf("\t\t\t\t")
-
+#define FP stdout
 
 
-static void showscore(struct dbs_game *game);
+#define PRINTTAB() fprintf(fp,"\t\t\t\t")
+
+
+
+static void showscore(FILE *fp,struct dbs_game *game);
 static int showErr (const char **str, int errno, const char *msg);
 static unsigned int basename (const char *ch);
-static void summary(struct dbs_game *game);
+static void summary(FILE *fp,struct dbs_game *game);
 
 
 static const char *idstr[]={"AI best move","AI worse move","AI random move","Hit score","Double tab","Game over","Normal",\
@@ -24,11 +26,11 @@ NULL};
 static dbv_ai gai[]={dbf_aiv1_Jarvis,dbf_aiv2_Friday};
 static const char *gainame[]={"Jarvis","Friday"};
 
-static void showscore(struct dbs_game *game)
+static void showscore(FILE *fp,struct dbs_game *game)
 {
-	printf("%s:Score-< %u",game->player[P1].name,game->player[P1].score);
-	printf(" >--VS--< ");
-	printf("%u >-Score:%s\n",game->player[P2].score,game->player[P2].name);
+	fprintf(fp,"%s:Score-< %u",game->player[P1].name,game->player[P1].score);
+	fprintf(fp," >--VS--< ");
+	fprintf(fp,"%u >-Score:%s\n",game->player[P2].score,game->player[P2].name);
 
 }
 
@@ -52,18 +54,18 @@ basename (const char *ch)
   return (j == 0) ? 0 : j + 1;
 }
 
-static void summary(struct dbs_game *game)
+static void summary(FILE *fp,struct dbs_game *game)
 {
 	const char *p1msg,*p2msg;
 	static const char WIN[]="Win!",LOSE[]="Lose",DRAW[]="Draw";
 	
-	printf("\n\n");
-	printf("%s\n\n","**************** [Game summary] ****************");
-	printf("%-10s%10s\t%10s\n\n","","PLAYER1","PLAYER2");
-	printf("%-10s%10s\t%10s\n","PNAME|",game->player[0].name,game->player[1].name);
-	printf("%-10s%10u\t%10u\n","DBTAB|",game->player[0].doubletab,game->player[1].doubletab);
-	printf("%-10s%10u\t%10u\n","PHITS|",game->player[0].score-2*game->player[0].doubletab,game->player[1].score-2*game->player[1].doubletab);
-	printf("%-10s%10u\t%10u\n","SCORE|",game->player[0].score,game->player[1].score);
+	fprintf(fp,"\n\n");
+	fprintf(fp,"%s\n\n","**************** [Game summary] ****************");
+	fprintf(fp,"%-10s%10s\t%10s\n\n","","PLAYER1","PLAYER2");
+	fprintf(fp,"%-10s%10s\t%10s\n","PNAME|",game->player[0].name,game->player[1].name);
+	fprintf(fp,"%-10s%10u\t%10u\n","DBTAB|",game->player[0].doubletab,game->player[1].doubletab);
+	fprintf(fp,"%-10s%10u\t%10u\n","PHITS|",game->player[0].score-2*game->player[0].doubletab,game->player[1].score-2*game->player[1].doubletab);
+	fprintf(fp,"%-10s%10u\t%10u\n","SCORE|",game->player[0].score,game->player[1].score);
 	
 	if(game->player[0].score > game->player[1].score)
 	{
@@ -79,10 +81,10 @@ static void summary(struct dbs_game *game)
 	{
 		p1msg=p2msg=DRAW;
 	}
-	printf("\n");
-	printf("%-10s%10s\t%10s\n","RESULT",p1msg,p2msg);
+	fprintf(fp,"\n");
+	fprintf(fp,"%-10s%10s\t%10s\n","RESULT",p1msg,p2msg);
 
-	printf("\n");	
-	printf("%s\n\n","**************** [Game summary] ****************");
+	fprintf(fp,"\n");	
+	fprintf(fp,"%s\n\n","**************** [Game summary] ****************");
 }
 

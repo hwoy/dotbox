@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include "dotbox.h"
 #include "dotbox_io.h"
@@ -9,32 +10,33 @@
 static void showHelp (const char *str, const char **param,const char **hparam);
 
 static const char *cptrarr_param[] =
-  { "-s:","-l:","-1","-2","-h", NULL };
+  { "-s:","-l:","-1","-2","-f:","-h", NULL };
 static const char *helpparam[] =
-  { "Squar","Squar length","AI V1-Jarvis go first","AI V2-Friday go first","Help",
+  { "Squar","Squar length","AI V1-Jarvis go first","AI V2-Friday go first","Out put to a file","Help",
   NULL
 };
  enum
 {
-  opt_s,opt_l,opt_1,opt_2, opt_h
+  opt_s,opt_l,opt_1,opt_2,opt_f, opt_h
 };
 
 static const char *err_str[] =
-  { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game","Squar length equal zero", NULL
+  { "Invalid option", "Not an unsigned integer","Squar equal zero","Can not init game","Squar length equal zero","Can not assign a file", NULL
 };
 
 enum
 {
-  err_inv, err_ni, err_sz, err_initgame, err_lz
+  err_inv, err_ni, err_sz, err_initgame, err_lz ,err_file
 };
 
 int main(int argc, const char *argv[])
 {
 	int i;
+	FILE *fp;
 	unsigned int aiid,gpid;
 	unsigned int pindex;
 	unsigned int length;
-	static char carray_buff[BSIZE];
+	static char carray_buff[BSIZE],filename[BSIZE];
 	unsigned int ui_cindex;
 	struct dbs_game game;
 	struct dbs_line line;
@@ -47,6 +49,8 @@ int main(int argc, const char *argv[])
 	dbf_srandom(time(NULL));
 	#endif
 
+	fp=FP;
+	filename[0]=0;
 	squar=D_SQR;
 	length=LEN;
 	p1name=gainame[P1];
@@ -80,6 +84,10 @@ int main(int argc, const char *argv[])
 		pindex=i-opt_1;
 		break;
 		
+		case opt_f:
+		strcpy(filename,carray_buff);
+		break;
+		
 		case opt_h:
 		showHelp (argv[0], cptrarr_param, helpparam);
 		return 1;
@@ -90,12 +98,18 @@ int main(int argc, const char *argv[])
 	}
 	}
 	
+	if(filename[0])
+	{
+		if(!(fp=fopen(filename,"w")))
+			return showErr (err_str, err_file, filename);
+	}
+	
 	if(!dbf_init(&game,p1name,p2name,squar,NULL))
 		return showErr (err_str, err_initgame, "dbf_init");
 
-	putchar('\n');
-	printTable(&game,length);
-	putchar('\n');
+	fputc('\n',fp);
+	printTable(fp,&game,length);
+	fputc('\n',fp);
 	
 do
 {
@@ -103,9 +117,9 @@ do
 		
 		aiid=gai[pindex](&game,&line);
 
-		putchar('\n');
-		if(pindex==P2)PRINTTAB();printf("NAME = %s\n",game.player[pindex].name);
-		if(pindex==P2)PRINTTAB();printf("AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
+		fputc('\n',fp);
+		if(pindex==P2)PRINTTAB();fprintf(fp,"NAME = %s\n",game.player[pindex].name);
+		if(pindex==P2)PRINTTAB();fprintf(fp,"AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
 		
 		if(aiid==ai_nomove)
 		{
@@ -116,10 +130,10 @@ do
 		
 
 		if(pindex==P2) PRINTTAB();
-		printf("MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
+		fprintf(fp,"MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
 		if(pindex==P2) PRINTTAB();
-		printf("GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
+		fprintf(fp,"GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
 		
 		
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -143,22 +157,23 @@ do
 		
 	}while(gpid>gp_gamenormal);
 	
-	putchar('\n');
-	showscore(&game);
-	putchar('\n');
+	fputc('\n',fp);
+	showscore(fp,&game);
+	fputc('\n',fp);
 	
-	putchar('\n');
-	printTable(&game,length);
-	putchar('\n');
+	fputc('\n',fp);
+	printTable(fp,&game,length);
+	fputc('\n',fp);
 	
 	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
 	pindex=!pindex;
 
 }while(gpid!=gp_gameover);
 
-summary(&game);
+summary(fp,&game);
 
 QUIT_GAME:
+	fclose(fp);
 	dbf_destroy(&game);
 	return 0;
 

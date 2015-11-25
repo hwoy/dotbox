@@ -21,7 +21,7 @@
 
 #define NLENGTH 10
 
-static char answer(const char *str,char *buff,unsigned int bsize,char dkey);
+static char answer(FILE *fp,const char *str,char *buff,unsigned int bsize,char dkey);
 static void helpkey(const char *key[],const char *keystr[]);
 static int key_option(const char *str,const char *key[],char *buff,unsigned int size);
 static void showHelp (const char *str, const char **param,const char **hparam);
@@ -72,6 +72,7 @@ enum
 int main(int argc, const char *argv[])
 {
 	int i;
+	FILE *fp;
 	unsigned int aiid,gpid;
 	unsigned int j;
 	unsigned int pindex;
@@ -91,6 +92,7 @@ int main(int argc, const char *argv[])
 	dbf_srandom(time(NULL));
 	#endif
 	
+	fp=FP;
 	squar=D_SQR;
 	p1name=d_p1name;
 	length=LEN;
@@ -166,9 +168,9 @@ do		/* When Game is over answer YES/NO NO=QUIT */
 	if(!dbf_init(&game,p1name,p2name,squar,ai))
 		return showErr (err_str, err_initgame, "dbf_init");
 
-	putchar('\n');
-	printTable(&game,length);
-	putchar('\n');
+	fputc('\n',fp);
+	printTable(fp,&game,length);
+	fputc('\n',fp);
 	
 do		/* Exit loop when gpid==gp_gameover */
 {
@@ -183,9 +185,9 @@ do		/* Exit loop when gpid==gp_gameover */
 	case COM:
 		aiid=game.ai(&game,&line);
 		
-		putchar('\n');
-		PRINTTAB();printf("NAME = %s\n",game.player[pindex].name);
-		PRINTTAB();printf("AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
+		fputc('\n',fp);
+		PRINTTAB();fprintf(fp,"NAME = %s\n",game.player[pindex].name);
+		PRINTTAB();fprintf(fp,"AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
 		
 		if(aiid==ai_nomove)
 		{
@@ -200,8 +202,8 @@ do		/* Exit loop when gpid==gp_gameover */
 	case YOU:
 		do		/* Exit loop when complete x or y line */
 		{
-		putchar('\n');		
-		printf("Enter a line (%s=help) --> ",key[10]);
+		fputc('\n',fp);		
+		fprintf(fp,"Enter a line (%s=help) --> ",key[10]);
 		
 		dio_getstr(buff,BSIZE);
 		i=key_option(buff,key,carray_buff,BSIZE);
@@ -246,7 +248,7 @@ do		/* Exit loop when gpid==gp_gameover */
 		  game.ai=ai;
 		  p2name=gainame[i-k_1];
 		  game.player[COM].name=p2name;
-		  printf("AI codename: %s activated!",p2name);
+		  fprintf(fp,"AI codename: %s activated!",p2name);
 		  break;
 		  
 		  case k_n:
@@ -259,7 +261,7 @@ do		/* Exit loop when gpid==gp_gameover */
 			strcpy(op1name,carray_buff);
 			p1name=op1name;
 			game.player[pindex].name=p1name;
-			printf("Setting Your name to %s\n",p1name);
+			fprintf(fp,"Setting Your name to %s\n",p1name);
 			break;
 			
 
@@ -306,13 +308,13 @@ do		/* Exit loop when gpid==gp_gameover */
 		
 /*************** Key T(Table) ***************/		
 		  case k_t:
-		putchar('\n');
-		showscore(&game);
-		putchar('\n');
+		fputc('\n',fp);
+		showscore(fp,&game);
+		fputc('\n',fp);
 	
-		putchar('\n');
-		printTable(&game,length);
-		putchar('\n');
+		fputc('\n',fp);
+		printTable(fp,&game,length);
+		fputc('\n',fp);
 		break;
 /*************** Key H(Help) ***************/
 		  case k_help:
@@ -321,7 +323,7 @@ do		/* Exit loop when gpid==gp_gameover */
 
 /*************** Key -(Quit) ***************/		  
 		  case k_quit:
-		if(answer("Do you want to quit this game?\n(Y/n)",buff,BSIZE,YES)==YES)
+		if(answer(fp,"Do you want to quit this game?\n(Y/n)",buff,BSIZE,YES)==YES)
 			goto QUIT_GAME;
 		break;
 		  
@@ -331,8 +333,8 @@ do		/* Exit loop when gpid==gp_gameover */
 			
 		
 		}while( i!=k_x && i!=k_y );		/* Exit loop when complete x or y line */
-	putchar('\n');
-	printf("NAME = %s\n",game.player[pindex].name);	
+	fputc('\n',fp);
+	fprintf(fp,"NAME = %s\n",game.player[pindex].name);	
 	break;
 	}
 	/************************** HUMAN **************************/
@@ -346,10 +348,10 @@ do		/* Exit loop when gpid==gp_gameover */
 		
 
 		if(pindex==COM) PRINTTAB();
-		printf("MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
+		fprintf(fp,"MOVE = (%u,%u) (%u,%u)\n",line.p1.x,line.p1.y,line.p2.x,line.p2.y);
 		
 		if(pindex==COM) PRINTTAB();
-		printf("GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
+		fprintf(fp,"GP_RID = %d*(%s)\n",gpid,idstr[gpid]);
 		
 		/************** Fatal Error(GP)(Require quit game) **************/
 		switch(gpid)
@@ -372,23 +374,23 @@ do		/* Exit loop when gpid==gp_gameover */
 		
 	}while(gpid>gp_gamenormal);		/* NORNAL ID <--gp_gamenormal--> ERROR ID*/
 	
-	putchar('\n');
-	showscore(&game);
-	putchar('\n');
+	fputc('\n',fp);
+	showscore(fp,&game);
+	fputc('\n',fp);
 	
-	putchar('\n');
-	printTable(&game,length);
-	putchar('\n');
+	fputc('\n',fp);
+	printTable(fp,&game,length);
+	fputc('\n',fp);
 	
 	if(gpid!=gp_hitscore && gpid!=gp_doubletab)
 	pindex=!pindex;
 
 }while(gpid!=gp_gameover);		/* Exit loop when gpid==gp_gameover */
 
-summary(&game);
+summary(fp,&game);
 
 
-	if((ch=answer("Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES))==YES)
+	if((ch=answer(fp,"Do you want to continue this game?\n(Y/n)",buff,BSIZE,YES))==YES)
 	{
 		dbf_destroy(&game);
 		
@@ -406,6 +408,7 @@ summary(&game);
 
 
 QUIT_GAME:
+	fclose(fp);
 	dbf_destroy(&game);
 	return 0;
 }
@@ -415,11 +418,11 @@ QUIT_GAME:
 
 
 
-static char answer(const char *str,char *buff,unsigned int bsize,char dkey)
+static char answer(FILE *fp,const char *str,char *buff,unsigned int bsize,char dkey)
 {
 	do
 	{
-	printf("%s",str);
+	fprintf(fp,"%s",str);
 	dio_getch(buff,bsize,0);
 	if(!sLen(buff))
 	{

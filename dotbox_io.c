@@ -5,48 +5,48 @@
 
 static void replacech(char *str,char ch,char rp);
 
-void printTable(struct dbs_game *game,unsigned int len)
+void printTable(FILE *fp,struct dbs_game *game,unsigned int len)
 {
 	unsigned int x,y,i,j;
-	putchar('\n');
+	fputc('\n',fp);
 	for(y=0;y<game->sqr+1;y++)
 	{
 		for(j=0;j<len+1;j++)
 		{
-			putchar('\t');
+			fputc('\t',fp);
 		for(x=0;x<game->sqr+1;x++)
 		{
 			if(j==0)
 			{
-				putchar('*');
+				fputc('*',fp);
 			if(game->point[y*(game->sqr+1)+x].next_x==STAMP && game->point[y*(game->sqr+1)+x+1].prev_x==STAMP && x<game->sqr)
 			{
-				for(i=0;i<len;i++)putchar('-');
+				for(i=0;i<len;i++)fputc('-',fp);
 			}
 			else
 			{
-				for(i=0;i<len;i++)putchar(0x20);
+				for(i=0;i<len;i++)fputc(0x20,fp);
 			}
 			}
 			else
 			{
 				if(game->point[y*(game->sqr+1)+x].next_y==STAMP && game->point[(y+1)*(game->sqr+1)+x].prev_y==STAMP)
 				{
-					putchar('|');
+					fputc('|',fp);
 				}
 				else
 				{
-					putchar(0x20);
+					fputc(0x20,fp);
 				}
-				for(i=0;i<len;i++)putchar(0x20);
+				for(i=0;i<len;i++)fputc(0x20,fp);
 			}
 		}
-		if(y<game->sqr)putchar('\n');
+		if(y<game->sqr)fputc('\n',fp);
 		
 		}
 		
 	}
-	putchar('\n');
+	fputc('\n',fp);
 }
 
 

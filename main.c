@@ -32,7 +32,7 @@ static const char d_p1name[]="YOU";
 
 static const char *key[]={"x","y","s:","l:","n:","1","2","-","+","t","h",NULL};
 static const char *keystr[]={"Enter a x line","Enter a y line","Enter a squar value","Enter a squar length","Rename",\
-"AI version 1","AI version 2","Quit game","New Game","Show game table","Show keys help",NULL};
+"AI version 1","AI version 2","Quit Game","New Game","Show game table","Show keys help",NULL};
 enum
 {
 	k_x,k_y,k_s,k_l,k_n,k_1,k_2,k_quit,k_new,k_t,k_help
@@ -358,7 +358,7 @@ do		/* Exit loop when gpid==gp_gameover */
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==COM) PRINTTAB();fprintf(stderr,"Fatal Error: require quit game\n");
+			if(pindex==COM) PRINTTAB();fprintf(stderr,"Fatal Error[PINDEX=%u]: require quit game\n",pindex);
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/

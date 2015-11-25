@@ -105,7 +105,10 @@ int main(int argc, const char *argv[])
 	}
 	
 	if(!dbf_init(&game,p1name,p2name,squar,NULL))
+	{
+		fclose(fp);
 		return showErr (err_str, err_initgame, "dbf_init");
+	}
 
 	fputc('\n',fp);
 	printTable(fp,&game,length);
@@ -123,6 +126,7 @@ do
 		
 		if(aiid==ai_nomove)
 		{
+			if(pindex==P2) PRINTTAB();fprintf(stderr,"AI Error[PINDEX=%u]: Quit game for breaking point\n",pindex);
 			goto QUIT_GAME;	
 		}
 		
@@ -141,7 +145,7 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Fatal Error: require quit game\n");
+			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Fatal Error[PINDEX=%u]: require quit game\n",pindex);
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -150,7 +154,7 @@ do
 		/************** Tiny Error(GP) **************/
 		if(gpid>=gp_invline) 
 		{
-			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Error: Quit game for breaking point\n");
+			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Error[PINDEX=%u]: Quit game for breaking point\n",pindex);
 			goto QUIT_GAME;
 		}
 		/************** Tiny Error(GP) **************/		

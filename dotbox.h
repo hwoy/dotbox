@@ -87,6 +87,3 @@ gp_gameover,gp_gamenormal,\
 gp_invline,gp_invx,gp_invy,ai_nomove,ai_errmalloc
 };
 
-#ifdef _DEVRAND_
-static const char DEVRAND[]="/dev/urandom";
-#endif

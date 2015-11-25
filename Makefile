@@ -1,4 +1,3 @@
-CC=gcc
 bin1=dotbox
 bin2=fvj
 CFLAGS=-O2 -std=c89 -pedantic -Wall -Werror # -D_DEVRAND_ # for better random numbers

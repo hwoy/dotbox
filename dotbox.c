@@ -6,6 +6,10 @@
 #include <time.h>
 #include "dotbox.h"
 
+#ifdef _DEVRAND_
+static const char DEVRAND[]="/dev/urandom";
+#endif
+
 static int rmremainline2(struct dbs_line *lbuff,struct dbs_line *tmp,unsigned int *nbuff,unsigned int ntmp);
 
 

@@ -46,13 +46,13 @@ void dbf_setpoint_prev_y(struct dbs_game *game,struct dbs_point *point);
 void dbf_setpoint_next_y(struct dbs_game *game,struct dbs_point *point);
 
 
-int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line);
+unsigned int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line);
 
 struct dbs_line *dbf_getpointlinex(struct dbs_game *game,unsigned int linenum,struct dbs_line *line);
 struct dbs_line *dbf_getpointliney(struct dbs_game *game,unsigned int linenum,struct dbs_line *line);
 
-int dbf_setlinex(struct dbs_game *game,unsigned int linenum);
-int dbf_setliney(struct dbs_game *game,unsigned int linenum);
+unsigned int dbf_setlinex(struct dbs_game *game,unsigned int linenum);
+unsigned int dbf_setliney(struct dbs_game *game,unsigned int linenum);
 
 void dbf_srandom (int seed);
 unsigned int dbf_rand(void);

@@ -112,7 +112,7 @@ void dbf_setpoint_next_y(struct dbs_game *game,struct dbs_point *point)
 
 
 
-int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
+unsigned int dbf_setlinepoint(struct dbs_game *game,struct dbs_line *line)
 {
 	if( ( ((int)(line->p2.x-line->p1.x))>1 || ((int)(line->p2.x-line->p1.x))<-1) && \
 	(((int)(line->p2.y-line->p1.y))>1 || ((int)(line->p2.y-line->p1.y))<-1)) return gp_invline;	
@@ -176,14 +176,14 @@ struct dbs_line *dbf_getpointliney(struct dbs_game *game,unsigned int linenum,st
 	return line;
 }
 
-int dbf_setlinex(struct dbs_game *game,unsigned int linenum)
+unsigned int dbf_setlinex(struct dbs_game *game,unsigned int linenum)
 {
 	struct dbs_line line;
 	dbf_getpointlinex(game,linenum,&line);
 	return dbf_setlinepoint(game,&line);
 }
 
-int dbf_setliney(struct dbs_game *game,unsigned int linenum)
+unsigned int dbf_setliney(struct dbs_game *game,unsigned int linenum)
 {
 	struct dbs_line line;
 	dbf_getpointliney(game,linenum,&line);
@@ -453,7 +453,7 @@ unsigned int dbf_aiv2_Friday(struct dbs_game *game,struct dbs_line *line)
 
 unsigned int dbf_gameplay(struct dbs_game *game,struct dbs_line *line,struct dbs_player *player)
 {
-	int result;
+	unsigned int result;
 	unsigned int count;
 		
 	count=dbf_countsqr(game);

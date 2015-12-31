@@ -14,7 +14,7 @@
 
 
 static void showscore(FILE *fp,struct dbs_game *game);
-static int showErr (const char **str, int errno, const char *msg);
+static int showErr (const char **str, int _errno, const char *msg);
 static unsigned int basename (const char *ch);
 static void summary(FILE *fp,struct dbs_game *game);
 
@@ -34,10 +34,10 @@ static void showscore(FILE *fp,struct dbs_game *game)
 
 }
 
-static int showErr (const char **str, int errno, const char *msg)
+static int showErr (const char **str, int _errno, const char *msg)
 {
-  fprintf (stderr, "ERR %d: %s : %s\n", errno, msg, str[errno]);
-  return -1 * (errno + 1);
+  fprintf (stderr, "ERR %d: %s : %s\n", _errno, msg, str[_errno]);
+  return -1 * (_errno + 1);
 }
 
 static unsigned int

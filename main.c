@@ -358,7 +358,9 @@ do		/* Exit loop when gpid==gp_gameover */
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==COM) PRINTTAB();fprintf(stderr,"Fatal Error[PINDEX=%u]: require quit game\n",pindex);
+			if(pindex==COM)
+				PRINTTAB();
+			fprintf(stderr,"Fatal Error[PINDEX=%u]: require quit game\n",pindex);
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/

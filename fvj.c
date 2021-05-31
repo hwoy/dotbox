@@ -121,12 +121,18 @@ do
 		aiid=gai[pindex](&game,&line);
 
 		fputc('\n',fp);
-		if(pindex==P2)PRINTTAB();fprintf(fp,"NAME = %s\n",game.player[pindex].name);
-		if(pindex==P2)PRINTTAB();fprintf(fp,"AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
+		if(pindex==P2)
+			PRINTTAB();
+		fprintf(fp,"NAME = %s\n",game.player[pindex].name);
+		if(pindex==P2)
+			PRINTTAB();
+		fprintf(fp,"AI_RID = %d*(%s)\n",aiid,idstr[aiid]);
 		
 		if(aiid==ai_nomove)
 		{
-			if(pindex==P2) PRINTTAB();fprintf(stderr,"AI Error[PINDEX=%u]: Quit game for breaking point\n",pindex);
+			if(pindex==P2)
+				PRINTTAB();
+			fprintf(stderr,"AI Error[PINDEX=%u]: Quit game for breaking point\n",pindex);
 			goto QUIT_GAME;	
 		}
 		
@@ -145,7 +151,9 @@ do
 		{
 			case ai_errmalloc:
 			case ai_nomove:
-			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Fatal Error[PINDEX=%u]: require quit game\n",pindex);
+			if(pindex==P2)
+				PRINTTAB();
+			fprintf(stderr,"GP Fatal Error[PINDEX=%u]: require quit game\n",pindex);
 			goto QUIT_GAME;
 		}
 		/************** Fatal Error(GP)(Require quit game) **************/
@@ -154,7 +162,9 @@ do
 		/************** Tiny Error(GP) **************/
 		if(gpid>=gp_invline) 
 		{
-			if(pindex==P2) PRINTTAB();fprintf(stderr,"GP Error[PINDEX=%u]: Quit game for breaking point\n",pindex);
+			if(pindex==P2)
+				PRINTTAB();
+			fprintf(stderr,"GP Error[PINDEX=%u]: Quit game for breaking point\n",pindex);
 			goto QUIT_GAME;
 		}
 		/************** Tiny Error(GP) **************/		
